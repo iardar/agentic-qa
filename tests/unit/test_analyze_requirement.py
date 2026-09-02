@@ -11,6 +11,5 @@ def test_analyze_requirement_adds_analysis_to_state() -> None:
 
     analysis = result["requirement_analysis"]
 
-    assert analysis.feature == "components"
-    assert analysis.operation == "delete"
-    assert analysis.needs_ui_exploration is True
+    assert analysis.feature == "Component management"
+    assert analysis.operation == "Delete an existing component"

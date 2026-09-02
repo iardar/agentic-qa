@@ -9,34 +9,24 @@ class RequirementEvaluationCase(BaseModel):
 
     expected_surface: InteractionSurface
 
-    required_condition_terms: list[str] = Field(
-        default_factory=list
-    )
+    required_condition_terms: list[str] = Field(default_factory=list)
 
-    required_condition_alternatives: list[list[str]] = Field(
-        default_factory=list
-    )
+    required_condition_alternatives: list[list[str]] = Field(default_factory=list)
 
-    required_outcome_terms: list[str] = Field(
-        default_factory=list
-    )
+    required_outcome_terms: list[str] = Field(default_factory=list)
 
-    required_outcome_alternatives: list[list[str]] = Field(
-        default_factory=list
-    )
+    required_outcome_alternatives: list[list[str]] = Field(default_factory=list)
 
     require_ambiguities: bool | None = None
-    
+
+
 CASES = [
     # ------------------------------------------------------------------
     # Surface unknown / business-level requirements
     # ------------------------------------------------------------------
-
     RequirementEvaluationCase(
         name="simple_delete",
-        requirement=(
-            "User should be able to delete an existing component."
-        ),
+        requirement=("User should be able to delete an existing component."),
         expected_surface=InteractionSurface.UNKNOWN,
         required_condition_alternatives=[
             [
@@ -56,7 +46,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="business_rule_referenced_component",
         requirement=(
@@ -84,12 +73,9 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="authorization_delete",
-        requirement=(
-            "Only administrators should be able to delete components."
-        ),
+        requirement=("Only administrators should be able to delete components."),
         expected_surface=InteractionSurface.UNKNOWN,
         required_outcome_alternatives=[
             [
@@ -108,7 +94,6 @@ CASES = [
         ],
         require_ambiguities=True,
     ),
-
     RequirementEvaluationCase(
         name="duplicate_component_name",
         requirement=(
@@ -136,7 +121,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="component_available_after_creation",
         requirement=(
@@ -164,12 +148,10 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="deleted_component_not_searchable",
         requirement=(
-            "After a component is deleted, it should no longer "
-            "appear in component search results."
+            "After a component is deleted, it should no longer appear in component search results."
         ),
         expected_surface=InteractionSurface.UNKNOWN,
         required_condition_alternatives=[
@@ -192,13 +174,9 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="search_interaction",
-        requirement=(
-            "Search results should update when the user "
-            "enters a component name."
-        ),
+        requirement=("Search results should update when the user enters a component name."),
         expected_surface=InteractionSurface.UNKNOWN,
         required_outcome_alternatives=[
             [
@@ -210,11 +188,9 @@ CASES = [
         ],
         require_ambiguities=True,
     ),
-
     # ------------------------------------------------------------------
     # Explicit UI / E2E requirements
     # ------------------------------------------------------------------
-
     RequirementEvaluationCase(
         name="search_ui",
         requirement=(
@@ -239,7 +215,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="create_component_ui",
         requirement=(
@@ -271,7 +246,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="edit_component_ui",
         requirement=(
@@ -297,7 +271,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="delete_confirmation_ui",
         requirement=(
@@ -326,7 +299,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="cancel_delete_ui",
         requirement=(
@@ -354,7 +326,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="login_success_ui",
         requirement=(
@@ -385,7 +356,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="login_invalid_password_ui",
         requirement=(
@@ -419,7 +389,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="protected_page_ui",
         requirement=(
@@ -450,7 +419,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="session_timeout_ui",
         requirement=(
@@ -488,11 +456,9 @@ CASES = [
             ],
         ],
     ),
-
     # ------------------------------------------------------------------
     # Explicit API / integration requirements
     # ------------------------------------------------------------------
-
     RequirementEvaluationCase(
         name="api_create_component",
         requirement=(
@@ -518,13 +484,9 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="api_missing_component_name",
-        requirement=(
-            "POST /components should return HTTP 400 "
-            "when the component name is missing."
-        ),
+        requirement=("POST /components should return HTTP 400 when the component name is missing."),
         expected_surface=InteractionSurface.API,
         required_condition_terms=[
             "component name",
@@ -541,7 +503,6 @@ CASES = [
             "400",
         ],
     ),
-
     RequirementEvaluationCase(
         name="api_duplicate_component",
         requirement=(
@@ -563,7 +524,6 @@ CASES = [
             "409",
         ],
     ),
-
     RequirementEvaluationCase(
         name="api_get_component",
         requirement=(
@@ -591,7 +551,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="api_component_not_found",
         requirement=(
@@ -613,7 +572,6 @@ CASES = [
             "404",
         ],
     ),
-
     RequirementEvaluationCase(
         name="api_update_component",
         requirement=(
@@ -645,7 +603,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="api_delete_referenced_component",
         requirement=(
@@ -672,7 +629,6 @@ CASES = [
             ],
         ],
     ),
-
     RequirementEvaluationCase(
         name="api_unauthorized_delete",
         requirement=(
@@ -693,30 +649,24 @@ CASES = [
             "403",
         ],
     ),
-
     # ------------------------------------------------------------------
     # Deliberately incomplete requirements
     # ------------------------------------------------------------------
-
     RequirementEvaluationCase(
         name="ambiguous_delete",
         requirement="Verify component deletion.",
         expected_surface=InteractionSurface.UNKNOWN,
         require_ambiguities=True,
     ),
-
     RequirementEvaluationCase(
         name="ambiguous_login",
         requirement="Verify login.",
         expected_surface=InteractionSurface.UNKNOWN,
         require_ambiguities=True,
     ),
-
     RequirementEvaluationCase(
         name="ambiguous_component_validation",
-        requirement=(
-            "Component data should be validated."
-        ),
+        requirement=("Component data should be validated."),
         expected_surface=InteractionSurface.UNKNOWN,
         require_ambiguities=True,
     ),

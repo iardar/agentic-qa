@@ -6,6 +6,7 @@ from agentic_qa.models import (
     TestDesign,
     TestExecutionResult,
 )
+from agentic_qa.retrieval.models import RepositoryContext
 
 
 class QAState(TypedDict, total=False):
@@ -13,7 +14,7 @@ class QAState(TypedDict, total=False):
 
     requirement_analysis: RequirementAnalysis
 
-    repository_context: list[str]
+    repository_context: RepositoryContext
 
     exploration_findings: list[str]
 

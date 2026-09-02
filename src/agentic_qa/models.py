@@ -11,13 +11,9 @@ class InteractionSurface(StrEnum):
 
 
 class RequirementAnalysis(BaseModel):
-    feature: str = Field(
-        description="Business or application feature being tested."
-    )
+    feature: str = Field(description="Business or application feature being tested.")
 
-    operation: str = Field(
-        description="Primary user or system operation being tested."
-    )
+    operation: str = Field(description="Primary user or system operation being tested.")
 
     objective: str = Field(
         description="Concise testing objective preserving the requirement intent."
@@ -42,17 +38,13 @@ class RequirementAnalysis(BaseModel):
 
     expected_outcomes: list[str] = Field(
         default_factory=list,
-        description=(
-            "Observable expected behaviors explicitly stated "
-            "in the requirement."
-        ),
+        description=("Observable expected behaviors explicitly stated in the requirement."),
     )
 
     ambiguities: list[str] = Field(
         default_factory=list,
         description=(
-            "Important information that is missing, unclear, "
-            "or insufficiently specified."
+            "Important information that is missing, unclear, or insufficiently specified."
         ),
     )
 
@@ -63,6 +55,7 @@ class RequirementAnalysis(BaseModel):
             "enough information to determine UI, API, or system."
         )
     )
+
 
 class TestDesign(BaseModel):
     title: str
@@ -88,4 +81,3 @@ class TestExecutionResult(BaseModel):
 class ResultAnalysis(BaseModel):
     summary: str
     classification: str
-

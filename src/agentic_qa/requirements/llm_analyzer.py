@@ -11,8 +11,8 @@ class LLMRequirementAnalyzer:
     ) -> None:
         self._model = model.with_structured_output(
             RequirementAnalysis,
-            method = "json_schema",
-            strict = True,
+            method="json_schema",
+            strict=True,
         )
 
     def analyze(
@@ -36,7 +36,7 @@ class LLMRequirementAnalyzer:
                     "requests, responses, status codes, or API contracts. "
                     "Use 'system' for system-level or non-interactive behavior such as "
                     "concurrency, throughput, background processing, or resource behavior. "
-                    "Otherwise use 'unknown'."                    
+                    "Otherwise use 'unknown'."
                     "Capture missing or unclear information in ambiguities. "
                     "Capture only material ambiguities: missing or unclear information "
                     "that could change the test design, expected behavior, required test "
@@ -46,8 +46,8 @@ class LLMRequirementAnalyzer:
                     "Prefer a small number of high-value ambiguities."
                     "Do not invent missing behavior."
                     "Do not treat optional implementation details as ambiguities unless "
-                    "they are necessary to verify the stated requirement."                                    
-                    )
+                    "they are necessary to verify the stated requirement."
+                )
             ),
             HumanMessage(
                 content=f"""

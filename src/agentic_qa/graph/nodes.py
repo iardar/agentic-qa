@@ -1,4 +1,4 @@
-from collections.abc import Callable
+from typing import Any, Protocol
 
 from agentic_qa.graph.state import QAState
 from agentic_qa.models import (
@@ -7,13 +7,22 @@ from agentic_qa.models import (
     ResultAnalysis,
     TestDesign,
     TestExecutionResult,
+    InteractionSurface,
 )
 from agentic_qa.requirements.analyzer import RequirementAnalyzer
+from agentic_qa.retrieval.models import RepositoryContext
+from agentic_qa.retrieval.provider import RepositoryContextProvider
 
+class QANode(Protocol):
+    def __call__(
+        self,
+        state: QAState,
+    ) -> Any:
+        ...
 
 def create_analyze_requirement_node(
     analyzer: RequirementAnalyzer,
-) -> Callable[[QAState], dict[str, RequirementAnalysis]]:
+) -> QANode:
     def analyze_requirement(
         state: QAState,
     ) -> dict[str, RequirementAnalysis]:
@@ -26,14 +35,19 @@ def create_analyze_requirement_node(
     return analyze_requirement
 
 
-def retrieve_context(
-    state: QAState,
-) -> dict[str, list[str]]:
-    _ = state["requirement_analysis"]
+def create_retrieve_context_node(
+    provider: RepositoryContextProvider,
+) -> QANode:
+    def retrieve_context(
+        state: QAState,
+    ) -> dict[str, RepositoryContext]:
+        context = provider.retrieve(state["requirement_analysis"])
 
-    return {
-        "repository_context": [],
-    }
+        return {
+            "repository_context": context,
+        }
+
+    return retrieve_context
 
 
 def explore_ui(
@@ -41,15 +55,16 @@ def explore_ui(
 ) -> dict[str, list[str]]:
     analysis = state["requirement_analysis"]
 
-    if not analysis.needs_ui_exploration:
-        return {"exploration_findings": []}
+    if analysis.interaction_surface != InteractionSurface.UI:
+        return {
+            "exploration_findings": [],
+        }
 
     return {
         "exploration_findings": [
             "UI exploration is not connected yet.",
-        ]
+        ],
     }
-
 
 def design_test(
     state: QAState,
