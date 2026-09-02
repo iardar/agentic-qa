@@ -1,0 +1,250 @@
+================================================================================
+CASE: simple_delete
+
+REQUIREMENT:
+User should be able to delete an existing component.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete an existing component",
+  "objective": "Verify that a user can delete an existing component.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "An existing component is available for deletion."
+  ],
+  "expected_outcomes": [
+    "The user is able to delete the existing component."
+  ],
+  "ambiguities": [
+    "The requirement does not specify how deletion is initiated or which interaction surface is used.",
+    "The requirement does not define the expected post-deletion result, such as whether the component is removed from listings, becomes inaccessible, or is recoverable.",
+    "The requirement does not specify authorization rules or which users may delete components."
+  ],
+  "interaction_surface": "unknown"
+}
+
+================================================================================
+CASE: business_rule
+
+REQUIREMENT:
+Deleting a component that is referenced by another component should be prevented and an error should be displayed.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete a component",
+  "objective": "Verify that deletion is blocked when the target component is referenced by another component and that an error is displayed.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The component selected for deletion is referenced by another component."
+  ],
+  "expected_outcomes": [
+    "The component deletion is prevented.",
+    "An error is displayed."
+  ],
+  "ambiguities": [
+    "The requirement does not define what constitutes a reference between components.",
+    "The required error content, presentation, or error identifier is not specified.",
+    "It is unclear whether deletion is blocked only for direct references or also for indirect/transitive references."
+  ],
+  "interaction_surface": "unknown"
+}
+
+================================================================================
+CASE: api_validation
+
+REQUIREMENT:
+POST /components should return HTTP 400 when the component name is missing.
+
+ANALYSIS:
+{
+  "feature": "Component creation",
+  "operation": "Submit a POST request to /components",
+  "objective": "Verify that creating a component without a name is rejected with HTTP 400.",
+  "actors": [
+    "API client"
+  ],
+  "conditions": [
+    "A POST request is sent to /components.",
+    "The component name is missing from the request."
+  ],
+  "expected_outcomes": [
+    "The response returns HTTP 400."
+  ],
+  "ambiguities": [
+    "The required request body format and the exact representation of a missing component name are not specified.",
+    "The response body or error contract for the HTTP 400 response is not specified."
+  ],
+  "interaction_surface": "api"
+}
+
+================================================================================
+CASE: authorization
+
+REQUIREMENT:
+Only administrators should be able to delete components.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete components",
+  "objective": "Verify that component deletion is restricted to administrators.",
+  "actors": [
+    "Administrators",
+    "Non-administrator users"
+  ],
+  "conditions": [
+    "A user attempts to delete a component.",
+    "The user's administrator status determines authorization."
+  ],
+  "expected_outcomes": [
+    "Administrators are able to delete components.",
+    "Non-administrator users are not able to delete components."
+  ],
+  "ambiguities": [
+    "The requirement does not specify how deletion is initiated or which interaction surface exposes it.",
+    "The required behavior when a non-administrator attempts deletion is not specified (for example, whether the action is hidden, disabled, or rejected).",
+    "The definition of administrator and applicable non-administrator roles or permissions is not specified."
+  ],
+  "interaction_surface": "unknown"
+}
+
+================================================================================
+CASE: search_interaction
+
+REQUIREMENT:
+Search results should update when the user enters a component name.
+
+ANALYSIS:
+{
+  "feature": "Search",
+  "operation": "Enter a component name to update search results",
+  "objective": "Verify that search results update when a user enters a component name.",
+  "actors": [
+    "user"
+  ],
+  "conditions": [
+    "The user enters a component name."
+  ],
+  "expected_outcomes": [
+    "Search results update."
+  ],
+  "ambiguities": [
+    "The requirement does not specify where or how the component name is entered, so the interaction surface is unclear.",
+    "The expected search-result content, matching behavior, and timing of the update are not specified."
+  ],
+  "interaction_surface": "unknown"
+}
+
+================================================================================
+CASE: search_ui
+
+REQUIREMENT:
+('On the Components page, search results should update', 'when the user types a component name into the Search field.')
+
+ANALYSIS:
+{
+  "feature": "Components page search",
+  "operation": "Search for a component by entering its name in the Search field",
+  "objective": "Verify that Components page search results update when a user enters a component name into the Search field.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user is on the Components page.",
+    "The user types a component name into the Search field."
+  ],
+  "expected_outcomes": [
+    "Search results update."
+  ],
+  "ambiguities": [
+    "The requirement does not specify which results should be shown or whether nonmatching components should be excluded.",
+    "The requirement does not define when results must update (for example, per keystroke, after a delay, or after completing the entry)."
+  ],
+  "interaction_surface": "ui"
+}
+
+================================================================================
+CASE: performance
+
+REQUIREMENT:
+The system should support 100 concurrent users searching for components without significant degradation.
+
+ANALYSIS:
+{
+  "feature": "Component search",
+  "operation": "Concurrent component searches",
+  "objective": "Verify that the system supports 100 concurrent users searching for components without significant degradation.",
+  "actors": [
+    "Concurrent users"
+  ],
+  "conditions": [
+    "100 users perform component searches concurrently."
+  ],
+  "expected_outcomes": [
+    "The system supports concurrent component searches by 100 users.",
+    "Search behavior does not experience significant degradation under the stated concurrent load."
+  ],
+  "ambiguities": [
+    "The requirement does not define measurable criteria for \"significant degradation\" (for example, response-time, error-rate, throughput, or availability thresholds).",
+    "The search workload is not specified, including search terms, result-set characteristics, search frequency, or duration of the concurrent load."
+  ],
+  "interaction_surface": "system"
+}
+
+================================================================================
+CASE: ambiguous
+
+REQUIREMENT:
+Verify component deletion.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete a component",
+  "objective": "Verify that a component can be deleted.",
+  "actors": [],
+  "conditions": [],
+  "expected_outcomes": [],
+  "ambiguities": [
+    "The requirement does not specify the interaction surface for deleting a component.",
+    "The component type, eligibility or state required for deletion, and the expected result after deletion are not specified.",
+    "It is unclear whether deletion requires confirmation, has dependency constraints, or should be reversible."
+  ],
+  "interaction_surface": "unknown"
+}
+
+================================================================================
+CASE: session
+
+REQUIREMENT:
+After 30 minutes of inactivity, the user's session should expire and the user should be redirected to the login page.
+
+ANALYSIS:
+{
+  "feature": "Session management",
+  "operation": "Session expiration after inactivity",
+  "objective": "Verify that a user's session expires after 30 minutes of inactivity and redirects the user to the login page.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user has an active session.",
+    "The user is inactive for 30 minutes."
+  ],
+  "expected_outcomes": [
+    "The user's session expires.",
+    "The user is redirected to the login page."
+  ],
+  "ambiguities": [
+    "The requirement does not define what actions or events count as user activity and reset the inactivity timer.",
+    "The requirement does not specify how expiry and redirection are expected to occur when the user has no active page interaction at the 30-minute threshold (for example, immediately, on the next request, or on the next navigation)."
+  ],
+  "interaction_surface": "ui"
+}
+
