@@ -1,0 +1,919 @@
+MODEL: gpt-5.6-terra
+
+================================================================================
+CASE: simple_delete
+
+REQUIREMENT:
+User should be able to delete an existing component.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete an existing component",
+  "objective": "Verify that a user can delete an existing component.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "A component already exists."
+  ],
+  "expected_outcomes": [
+    "The user is able to delete the existing component."
+  ],
+  "ambiguities": [
+    "The interaction surface for deleting a component is not specified.",
+    "The definition of a component and how an existing component is identified are not specified.",
+    "Post-deletion behavior is not specified, such as whether the component is removed from listings, cannot be accessed, or whether confirmation is required."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS condition_concepts       accepted alternatives=[['existing', 'exists', 'already exists', 'available for deletion']]
+  PASS outcome_concepts         accepted alternatives=[['delete', 'deleted', 'deletion', 'remove', 'removed']]
+
+================================================================================
+CASE: business_rule_referenced_component
+
+REQUIREMENT:
+Deleting a component that is referenced by another component should be prevented and an error should be displayed.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete a component",
+  "objective": "Verify that deletion is prevented when the target component is referenced by another component and that an error is displayed.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The component selected for deletion is referenced by another component."
+  ],
+  "expected_outcomes": [
+    "The referenced component is not deleted.",
+    "An error is displayed."
+  ],
+  "ambiguities": [
+    "The requirement does not specify what constitutes a reference between components.",
+    "The error content, format, and where it is displayed are not specified.",
+    "The interaction surface for initiating deletion and displaying the error is not specified."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS condition_concepts       accepted alternatives=[['referenced', 'has a reference', 'dependency']]
+  PASS outcome_terms            required terms=['error']
+  FAIL outcome_concepts         accepted alternatives=[['prevent', 'blocked', 'rejected', 'not allowed', 'cannot be deleted']]
+
+================================================================================
+CASE: authorization_delete
+
+REQUIREMENT:
+Only administrators should be able to delete components.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete components",
+  "objective": "Verify that component deletion is restricted to administrators.",
+  "actors": [
+    "Administrator",
+    "Non-administrator user"
+  ],
+  "conditions": [
+    "A user attempts to delete a component.",
+    "The user's role is administrator or non-administrator."
+  ],
+  "expected_outcomes": [
+    "Administrators are able to delete components.",
+    "Non-administrators are not able to delete components."
+  ],
+  "ambiguities": [
+    "The requirement does not define which roles or permission states are considered non-administrators.",
+    "The requirement does not specify how denial of deletion should be presented or enforced.",
+    "The interaction surface for deletion is not specified."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS outcome_concepts         accepted alternatives=[['administrators are able', 'administrators can', 'administrators are permitted', 'administrator users can'], ['non-administrator', 'not permitted', 'cannot delete', 'not allowed', 'forbidden']]
+  PASS ambiguities              expected ambiguities=True, actual count=3
+
+================================================================================
+CASE: duplicate_component_name
+
+REQUIREMENT:
+A component cannot be created when another component with the same name already exists.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Create a component",
+  "objective": "Verify that creation of a component is prevented when another component with the same name already exists.",
+  "actors": [],
+  "conditions": [
+    "A component with the intended name already exists."
+  ],
+  "expected_outcomes": [
+    "A new component with the same name cannot be created."
+  ],
+  "ambiguities": [
+    "The scope of name uniqueness is not specified (for example, global or within a project, tenant, or parent container).",
+    "The expected indication of the rejected creation is not specified (for example, validation message, error response, or other feedback).",
+    "Name comparison rules are not specified, including case sensitivity, whitespace handling, and normalization."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  FAIL condition_terms          required terms=['same name']
+  PASS condition_concepts       accepted alternatives=[['exists', 'already exists', 'existing']]
+  PASS outcome_concepts         accepted alternatives=[['cannot be created', 'creation is prevented', 'creation is rejected', 'not created', 'prevented']]
+
+================================================================================
+CASE: component_available_after_creation
+
+REQUIREMENT:
+After a component is created, it should be available for selection when creating a new project.
+
+ANALYSIS:
+{
+  "feature": "Component and project creation",
+  "operation": "Select a previously created component while creating a new project",
+  "objective": "Verify that a component becomes available for selection during new-project creation after it has been created.",
+  "actors": [],
+  "conditions": [
+    "A component has been created.",
+    "A new project is being created after the component is created."
+  ],
+  "expected_outcomes": [
+    "The created component is available for selection when creating the new project."
+  ],
+  "ambiguities": [
+    "The requirement does not specify where or how component selection is presented during project creation.",
+    "The requirement does not specify whether all created components, only certain component types, or components meeting particular status/permission criteria should be selectable."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS condition_terms          required terms=['project']
+  PASS condition_concepts       accepted alternatives=[['component is created', 'component has been created', 'component was created', 'created component']]
+  PASS outcome_concepts         accepted alternatives=[['available for selection', 'can be selected', 'selectable', 'available to select']]
+
+================================================================================
+CASE: deleted_component_not_searchable
+
+REQUIREMENT:
+After a component is deleted, it should no longer appear in component search results.
+
+ANALYSIS:
+{
+  "feature": "Component search",
+  "operation": "Delete a component and search for it",
+  "objective": "Verify that a deleted component is excluded from component search results.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "A component has been deleted.",
+    "A search is performed for the deleted component."
+  ],
+  "expected_outcomes": [
+    "The deleted component does not appear in component search results."
+  ],
+  "ambiguities": [
+    "The requirement does not specify how a component is deleted or how component search is accessed.",
+    "The requirement does not specify whether removal from search results must be immediate or may be delayed due to indexing or synchronization."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS condition_concepts       accepted alternatives=[['deleted', 'has been deleted', 'removed']]
+  PASS outcome_terms            required terms=['search']
+  PASS outcome_concepts         accepted alternatives=[['no longer', 'does not appear', 'not appear', 'excluded', 'absent']]
+
+================================================================================
+CASE: search_interaction
+
+REQUIREMENT:
+Search results should update when the user enters a component name.
+
+ANALYSIS:
+{
+  "feature": "Search",
+  "operation": "Enter a component name to search",
+  "objective": "Verify that search results update when a user enters a component name.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user enters a component name."
+  ],
+  "expected_outcomes": [
+    "Search results update."
+  ],
+  "ambiguities": [
+    "The interaction surface is not specified; it is unclear whether the component name is entered through a UI field, API request, or another mechanism.",
+    "The expected updated results are not defined, including whether they must match the entered component name and how matching is determined.",
+    "The timing or trigger for the update is not specified (for example, during entry or after submission)."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS outcome_concepts         accepted alternatives=[['update', 'updated', 'refresh', 'refreshed']]
+  PASS ambiguities              expected ambiguities=True, actual count=3
+
+================================================================================
+CASE: search_ui
+
+REQUIREMENT:
+On the Components page, search results should update when the user types a component name into the Search field.
+
+ANALYSIS:
+{
+  "feature": "Components search",
+  "operation": "Searching for components by name",
+  "objective": "Verify that component search results update when a user enters a component name in the Search field on the Components page.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user is on the Components page.",
+    "The user types a component name into the Search field."
+  ],
+  "expected_outcomes": [
+    "Search results update in response to the entered component name."
+  ],
+  "ambiguities": [
+    "The requirement does not specify whether results must update after each keystroke, after a debounce interval, or only after the full name is entered.",
+    "The expected matching behavior is not specified (for example, exact, partial, case-sensitive, or case-insensitive matching).",
+    "The requirement does not define the expected result when no components match the entered name."
+  ],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_terms          required terms=['Components page', 'Search field']
+  PASS outcome_terms            required terms=['search']
+  PASS outcome_concepts         accepted alternatives=[['update', 'updated', 'refresh', 'refreshed', 'filtered']]
+
+================================================================================
+CASE: create_component_ui
+
+REQUIREMENT:
+On the Components page, when the user creates a component with a valid name and clicks Save, the new component should appear in the component list.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Create a component",
+  "objective": "Verify that creating a component with a valid name adds the new component to the component list.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user is on the Components page.",
+    "A valid component name is provided.",
+    "The user clicks Save."
+  ],
+  "expected_outcomes": [
+    "The new component appears in the component list."
+  ],
+  "ambiguities": [
+    "The requirement does not define what constitutes a valid component name.",
+    "The requirement does not specify whether the displayed component name must exactly match the entered name or any required timing/refresh behavior for list visibility."
+  ],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_terms          required terms=['Save']
+  PASS condition_concepts       accepted alternatives=[['valid name', 'valid component name', 'name is valid']]
+  PASS outcome_terms            required terms=['component', 'list']
+  PASS outcome_concepts         accepted alternatives=[['appear', 'shown', 'displayed', 'added']]
+
+================================================================================
+CASE: edit_component_ui
+
+REQUIREMENT:
+On the Edit Component page, changing the component description and clicking Save should update the description shown on the Component Details page.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Edit a component description and save the change",
+  "objective": "Verify that a saved component-description change is reflected on the Component Details page.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user is on the Edit Component page.",
+    "The component description is changed.",
+    "The user clicks Save."
+  ],
+  "expected_outcomes": [
+    "The updated description is shown on the Component Details page."
+  ],
+  "ambiguities": [
+    "The requirement does not specify whether any validation, confirmation, error handling, or persistence behavior is expected if saving fails."
+  ],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_terms          required terms=['description', 'Save']
+  PASS outcome_terms            required terms=['description']
+  PASS outcome_concepts         accepted alternatives=[['update', 'updated', 'reflect', 'shown', 'displayed']]
+
+================================================================================
+CASE: delete_confirmation_ui
+
+REQUIREMENT:
+When the user clicks Delete on the Components page, a confirmation dialog should appear before the component is permanently deleted.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete a component",
+  "objective": "Verify that deleting a component from the Components page requires confirmation before the component is permanently deleted.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user clicks Delete on the Components page."
+  ],
+  "expected_outcomes": [
+    "A confirmation dialog appears before the component is permanently deleted."
+  ],
+  "ambiguities": [
+    "The requirement does not specify the confirmation dialog actions or the expected result when deletion is confirmed or cancelled.",
+    "The requirement does not specify how permanent deletion is observable or verified."
+  ],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_terms          required terms=['Delete']
+  PASS outcome_terms            required terms=['dialog']
+  PASS outcome_concepts         accepted alternatives=[['confirmation', 'confirm deletion', 'confirmation prompt'], ['appear', 'displayed', 'shown', 'opens']]
+
+================================================================================
+CASE: cancel_delete_ui
+
+REQUIREMENT:
+When the delete confirmation dialog is open and the user clicks Cancel, the dialog should close and the component should remain in the component list.
+
+ANALYSIS:
+{
+  "feature": "Component deletion",
+  "operation": "Cancel deletion from the delete confirmation dialog",
+  "objective": "Verify that cancelling an open delete confirmation dialog closes the dialog without removing the component from the component list.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The delete confirmation dialog is open.",
+    "The component is present in the component list.",
+    "The user clicks Cancel."
+  ],
+  "expected_outcomes": [
+    "The delete confirmation dialog closes.",
+    "The component remains in the component list."
+  ],
+  "ambiguities": [],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_terms          required terms=['confirmation dialog', 'Cancel']
+  PASS outcome_concepts         accepted alternatives=[['close', 'closes', 'closed', 'dismissed'], ['remain', 'remains', 'still present', 'not deleted']]
+
+================================================================================
+CASE: login_success_ui
+
+REQUIREMENT:
+When a registered user enters valid credentials on the Login page and clicks Sign in, the Dashboard page should be displayed.
+
+ANALYSIS:
+{
+  "feature": "User authentication",
+  "operation": "Sign in to the application",
+  "objective": "Verify that a registered user with valid credentials is taken to the Dashboard page after signing in.",
+  "actors": [
+    "Registered user"
+  ],
+  "conditions": [
+    "The user is registered.",
+    "The user enters valid credentials on the Login page.",
+    "The user clicks Sign in."
+  ],
+  "expected_outcomes": [
+    "The Dashboard page is displayed."
+  ],
+  "ambiguities": [
+    "The requirement does not identify which credential fields or credential formats are considered valid.",
+    "The requirement does not specify whether the Dashboard page must be displayed immediately or after any intermediate loading or verification state."
+  ],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_terms          required terms=['Login']
+  PASS condition_concepts       accepted alternatives=[['valid credentials', 'correct credentials', 'valid username and password']]
+  PASS outcome_terms            required terms=['Dashboard']
+  PASS outcome_concepts         accepted alternatives=[['displayed', 'shown', 'opened', 'redirected', 'navigated']]
+
+================================================================================
+CASE: login_invalid_password_ui
+
+REQUIREMENT:
+When a user enters a valid username and an invalid password on the Login page, an authentication error should be displayed and the user should remain on the Login page.
+
+ANALYSIS:
+{
+  "feature": "User authentication",
+  "operation": "Attempt to log in with a valid username and an invalid password",
+  "objective": "Verify that a failed authentication attempt with a valid username and invalid password displays an authentication error and keeps the user on the Login page.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user is on the Login page.",
+    "A valid username is entered.",
+    "An invalid password is entered."
+  ],
+  "expected_outcomes": [
+    "An authentication error is displayed.",
+    "The user remains on the Login page."
+  ],
+  "ambiguities": [
+    "The required authentication error message text or format is not specified.",
+    "The requirement does not specify how validity of the username and invalidity of the password are established or what test account data should be used."
+  ],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_concepts       accepted alternatives=[['invalid password', 'incorrect password', 'wrong password']]
+  PASS outcome_terms            required terms=['Login page']
+  PASS outcome_concepts         accepted alternatives=[['error', 'authentication failure', 'login failed', 'rejected'], ['remain', 'stays', 'does not navigate', 'not redirected']]
+
+================================================================================
+CASE: protected_page_ui
+
+REQUIREMENT:
+When an unauthenticated user opens the Components page, the browser should redirect the user to the Login page.
+
+ANALYSIS:
+{
+  "feature": "Authentication access control",
+  "operation": "Open the Components page",
+  "objective": "Verify that unauthenticated users are redirected to the Login page when attempting to access the Components page.",
+  "actors": [
+    "Unauthenticated user"
+  ],
+  "conditions": [
+    "The user is unauthenticated.",
+    "The user opens the Components page."
+  ],
+  "expected_outcomes": [
+    "The browser redirects the user to the Login page."
+  ],
+  "ambiguities": [
+    "The requirement does not specify how unauthenticated status is established or whether an expired session is included.",
+    "The requirement does not specify the expected Login page destination identifier, such as its URL or route."
+  ],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_terms          required terms=['Components page']
+  PASS condition_concepts       accepted alternatives=[['unauthenticated', 'not authenticated', 'not logged in', 'signed out']]
+  PASS outcome_terms            required terms=['Login page']
+  PASS outcome_concepts         accepted alternatives=[['redirect', 'redirected', 'sent', 'navigated']]
+
+================================================================================
+CASE: session_timeout_ui
+
+REQUIREMENT:
+After 30 minutes of inactivity, the user's session should expire and the user should be redirected to the Login page.
+
+ANALYSIS:
+{
+  "feature": "Session management",
+  "operation": "Session expiration after inactivity",
+  "objective": "Verify that an inactive user's session expires after 30 minutes and the user is redirected to the Login page.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [
+    "The user has an active session.",
+    "The user is inactive for 30 minutes."
+  ],
+  "expected_outcomes": [
+    "The user's session expires.",
+    "The user is redirected to the Login page."
+  ],
+  "ambiguities": [
+    "The requirement does not define what actions or events count as user activity or inactivity.",
+    "The requirement does not specify whether expiration is evaluated exactly at 30 minutes or upon the user's next interaction/request after 30 minutes."
+  ],
+  "interaction_surface": "ui"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=ui, actual=ui
+  PASS condition_terms          required terms=['30 minutes']
+  PASS condition_concepts       accepted alternatives=[['inactivity', 'inactive', 'no activity']]
+  PASS outcome_terms            required terms=['Login page']
+  PASS outcome_concepts         accepted alternatives=[['expire', 'expired', 'expires', 'timeout', 'times out', 'invalidated'], ['redirect', 'redirected', 'sent', 'navigated']]
+
+================================================================================
+CASE: api_create_component
+
+REQUIREMENT:
+POST /components with a valid component name should create the component and return HTTP 201.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Create a component",
+  "objective": "Verify that creating a component with a valid component name succeeds.",
+  "actors": [
+    "API client"
+  ],
+  "conditions": [
+    "A POST request is sent to /components with a valid component name."
+  ],
+  "expected_outcomes": [
+    "The component is created.",
+    "The response returns HTTP 201."
+  ],
+  "ambiguities": [
+    "The request payload format and the field that contains the component name are not specified.",
+    "The response body or headers, including any created-component representation or Location header, are not specified.",
+    "The criteria defining a valid component name are not specified."
+  ],
+  "interaction_surface": "api"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=api, actual=api
+  PASS condition_concepts       accepted alternatives=[['valid component name', 'valid name', 'component name is valid']]
+  PASS outcome_terms            required terms=['201']
+  PASS outcome_concepts         accepted alternatives=[['create', 'created', 'creation succeeds']]
+
+================================================================================
+CASE: api_missing_component_name
+
+REQUIREMENT:
+POST /components should return HTTP 400 when the component name is missing.
+
+ANALYSIS:
+{
+  "feature": "Component creation",
+  "operation": "Submit a POST request to /components",
+  "objective": "Verify that creating a component without a name is rejected with HTTP 400.",
+  "actors": [
+    "API client"
+  ],
+  "conditions": [
+    "The request is sent using POST to /components.",
+    "The component name is missing from the request."
+  ],
+  "expected_outcomes": [
+    "The response returns HTTP 400."
+  ],
+  "ambiguities": [
+    "The request payload format and how a missing name is represented are not specified.",
+    "The response body or error-message contract is not specified."
+  ],
+  "interaction_surface": "api"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=api, actual=api
+  PASS condition_terms          required terms=['component name']
+  PASS condition_concepts       accepted alternatives=[['missing', 'omitted', 'absent', 'not provided']]
+  PASS outcome_terms            required terms=['400']
+
+================================================================================
+CASE: api_duplicate_component
+
+REQUIREMENT:
+POST /components should return HTTP 409 when a component with the same name already exists.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Create a component",
+  "objective": "Verify that creating a component whose name already exists is rejected with HTTP 409.",
+  "actors": [
+    "API client"
+  ],
+  "conditions": [
+    "A component with the same name already exists.",
+    "A POST request is sent to /components."
+  ],
+  "expected_outcomes": [
+    "POST /components returns HTTP 409 when the submitted component name matches an existing component name."
+  ],
+  "ambiguities": [
+    "The required request payload and the field that represents the component name are not specified.",
+    "The response body or error contract for the HTTP 409 response is not specified.",
+    "It is unclear whether name matching is case-sensitive or subject to normalization rules."
+  ],
+  "interaction_surface": "api"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=api, actual=api
+  PASS condition_terms          required terms=['same name']
+  PASS condition_concepts       accepted alternatives=[['exists', 'already exists', 'existing']]
+  PASS outcome_terms            required terms=['409']
+
+================================================================================
+CASE: api_get_component
+
+REQUIREMENT:
+GET /components/{id} should return HTTP 200 and the component details when the requested component exists.
+
+ANALYSIS:
+{
+  "feature": "Component retrieval",
+  "operation": "Retrieve a component by its identifier",
+  "objective": "Verify that retrieving an existing component returns its details with HTTP 200.",
+  "actors": [
+    "Client",
+    "Component service"
+  ],
+  "conditions": [
+    "A component with the requested identifier exists.",
+    "A GET request is sent to /components/{id}."
+  ],
+  "expected_outcomes": [
+    "The response returns HTTP 200.",
+    "The response includes the requested component's details."
+  ],
+  "ambiguities": [
+    "The required component-detail response schema and fields are not specified.",
+    "The valid identifier format and source of an existing component identifier are not specified."
+  ],
+  "interaction_surface": "api"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=api, actual=api
+  PASS condition_concepts       accepted alternatives=[['exists', 'existing', 'already exists', 'is present']]
+  PASS outcome_terms            required terms=['200']
+  PASS outcome_concepts         accepted alternatives=[['details', 'component data', 'component information', 'component representation']]
+
+================================================================================
+CASE: api_component_not_found
+
+REQUIREMENT:
+GET /components/{id} should return HTTP 404 when the requested component does not exist.
+
+ANALYSIS:
+{
+  "feature": "Component retrieval",
+  "operation": "Retrieve a component by ID",
+  "objective": "Verify that requesting a nonexistent component returns HTTP 404.",
+  "actors": [
+    "API client"
+  ],
+  "conditions": [
+    "A GET request is made to /components/{id}.",
+    "The requested component does not exist."
+  ],
+  "expected_outcomes": [
+    "The response returns HTTP 404."
+  ],
+  "ambiguities": [
+    "The requirement does not specify the response body or error payload expected with the 404 response.",
+    "The requirement does not define how a nonexistent component ID should be selected or represented."
+  ],
+  "interaction_surface": "api"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=api, actual=api
+  PASS condition_concepts       accepted alternatives=[['does not exist', "doesn't exist", 'not exist', 'non-existent', 'not found', 'absent']]
+  PASS outcome_terms            required terms=['404']
+
+================================================================================
+CASE: api_update_component
+
+REQUIREMENT:
+PUT /components/{id} with a valid description should update the existing component and return HTTP 200.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Update an existing component",
+  "objective": "Verify that a PUT request to /components/{id} with a valid description updates the existing component and returns HTTP 200.",
+  "actors": [
+    "API client"
+  ],
+  "conditions": [
+    "A component identified by {id} already exists.",
+    "The request uses PUT /components/{id}.",
+    "The request contains a valid description."
+  ],
+  "expected_outcomes": [
+    "The existing component is updated.",
+    "The response returns HTTP 200."
+  ],
+  "ambiguities": [
+    "The request-body schema and the criteria that make a description valid are not specified.",
+    "The response body or other confirmation mechanism for verifying the updated description is not specified."
+  ],
+  "interaction_surface": "api"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=api, actual=api
+  PASS condition_concepts       accepted alternatives=[['existing', 'exists', 'already exists'], ['valid description', 'description is valid', 'valid component description']]
+  PASS outcome_terms            required terms=['200']
+  PASS outcome_concepts         accepted alternatives=[['update', 'updated', 'modified', 'changed']]
+
+================================================================================
+CASE: api_delete_referenced_component
+
+REQUIREMENT:
+DELETE /components/{id} should return HTTP 409 and leave the component unchanged when it is referenced by another component.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete a component",
+  "objective": "Verify that deleting a component that is referenced by another component is rejected without modifying the target component.",
+  "actors": [
+    "Client",
+    "Component"
+  ],
+  "conditions": [
+    "A DELETE request is made to /components/{id}.",
+    "The target component is referenced by another component."
+  ],
+  "expected_outcomes": [
+    "The DELETE request returns HTTP 409.",
+    "The target component remains unchanged."
+  ],
+  "ambiguities": [
+    "The requirement does not define what constitutes an unchanged component (for example, whether only the component record must remain or whether related state must also remain unchanged).",
+    "The requirement does not specify how the reference relationship is established or what types of component references qualify."
+  ],
+  "interaction_surface": "api"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=api, actual=api
+  PASS condition_concepts       accepted alternatives=[['referenced', 'has a reference', 'dependency']]
+  PASS outcome_terms            required terms=['409']
+  PASS outcome_concepts         accepted alternatives=[['unchanged', 'not modified', 'remains unchanged', 'preserved']]
+
+================================================================================
+CASE: api_unauthorized_delete
+
+REQUIREMENT:
+DELETE /components/{id} should return HTTP 403 when the authenticated user does not have permission to delete components.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete a component",
+  "objective": "Verify that an authenticated user without permission to delete components is forbidden from deleting a component.",
+  "actors": [
+    "Authenticated user without component-deletion permission"
+  ],
+  "conditions": [
+    "A DELETE request is made to /components/{id}.",
+    "The authenticated user does not have permission to delete components."
+  ],
+  "expected_outcomes": [
+    "The request returns HTTP 403."
+  ],
+  "ambiguities": [
+    "It is not specified whether the component identified by {id} must exist for the 403 response expectation.",
+    "The requirement does not specify whether any response body or error format is expected.",
+    "The requirement does not specify whether the component must remain unchanged after the forbidden request."
+  ],
+  "interaction_surface": "api"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=api, actual=api
+  PASS condition_concepts       accepted alternatives=[['does not have permission', 'without permission', 'lacks permission', 'not authorized', 'unauthorized']]
+  PASS outcome_terms            required terms=['403']
+
+================================================================================
+CASE: ambiguous_delete
+
+REQUIREMENT:
+Verify component deletion.
+
+ANALYSIS:
+{
+  "feature": "Component management",
+  "operation": "Delete a component",
+  "objective": "Verify that a component can be deleted.",
+  "actors": [],
+  "conditions": [],
+  "expected_outcomes": [
+    "A component is deleted."
+  ],
+  "ambiguities": [
+    "The component type, identifier, and initial state are not specified.",
+    "The interaction surface for deletion is not specified.",
+    "The required post-deletion behavior or verification criteria (for example, removal from listings, handling of related data, or confirmation/error behavior) are not specified."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS ambiguities              expected ambiguities=True, actual count=3
+
+================================================================================
+CASE: ambiguous_login
+
+REQUIREMENT:
+Verify login.
+
+ANALYSIS:
+{
+  "feature": "Authentication",
+  "operation": "Login",
+  "objective": "Verify that login behavior works as required.",
+  "actors": [
+    "User"
+  ],
+  "conditions": [],
+  "expected_outcomes": [],
+  "ambiguities": [
+    "No authentication inputs, credentials, or user state are specified.",
+    "The expected result of a successful or unsuccessful login is not specified.",
+    "The interaction surface is not specified."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS ambiguities              expected ambiguities=True, actual count=3
+
+================================================================================
+CASE: ambiguous_component_validation
+
+REQUIREMENT:
+Component data should be validated.
+
+ANALYSIS:
+{
+  "feature": "Component data validation",
+  "operation": "Validate component data",
+  "objective": "Verify that component data is validated.",
+  "actors": [],
+  "conditions": [],
+  "expected_outcomes": [
+    "Component data is validated."
+  ],
+  "ambiguities": [
+    "The component type, scope, and data elements subject to validation are not specified.",
+    "Validation rules, including valid and invalid criteria, required fields, formats, ranges, and dependencies, are not specified.",
+    "The expected validation result or handling when data is invalid is not specified.",
+    "The interaction surface through which component data is provided or validated is not specified."
+  ],
+  "interaction_surface": "unknown"
+}
+
+CHECKS:
+  PASS interaction_surface      expected=unknown, actual=unknown
+  PASS ambiguities              expected ambiguities=True, actual count=4
+
+================================================================================
+SUMMARY
+
+Passed: 98/100
+Score:  98.0%
