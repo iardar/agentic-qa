@@ -4,6 +4,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
+from langchain_core.runnables import RunnableConfig
 from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel
 
@@ -62,12 +63,26 @@ def main() -> None:
 
     args = parser.parse_args()
 
+    config: RunnableConfig = {
+        "run_name": "agentic_qa_workflow",
+        "tags": [
+            "dev",
+            "retrieval-v1",
+        ],
+        "metadata": {
+            "model": settings.llm_model,
+            "retireval_version": "v1-keyword",
+            "application": "agentic-qa",
+        },
+    }
+
     workflow = create_workflow()
 
     result = workflow.invoke(
         {
             "requirement": args.requirement,
-        }
+        },
+        confgi=config,
     )
 
     print(

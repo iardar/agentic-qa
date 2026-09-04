@@ -1,4 +1,5 @@
 from typing import Any, Protocol
+import langsmith as ls
 
 from agentic_qa.graph.state import QAState
 from agentic_qa.models import (
@@ -41,14 +42,40 @@ def create_retrieve_context_node(
     def retrieve_context(
         state: QAState,
     ) -> dict[str, RepositoryContext]:
-        context = provider.retrieve(state["requirement_analysis"])
+        analysis = state["requirement_analysis"]
+
+        with ls.trace(
+            "keyword_repository_retrieval",
+            "chain",
+            inputs={
+                "requirement_analysis": (
+                    analysis.model_dump(
+                        mode="json"
+                    )
+                ),
+            },
+        ) as run:
+            context = provider.retrieve(
+                analysis
+            )
+
+            run.end(
+                outputs={
+                    "query_terms": context.query_terms,
+                    "items": [
+                        item.model_dump(
+                            mode="json"
+                        )
+                        for item in context.items
+                    ],
+                }
+            )
 
         return {
             "repository_context": context,
         }
 
     return retrieve_context
-
 
 def explore_ui(
     state: QAState,

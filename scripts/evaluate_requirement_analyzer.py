@@ -1,147 +1,38 @@
 import json
-from dataclasses import dataclass
+from pathlib import Path
 
 from langchain_openai import ChatOpenAI
 
 from agentic_qa.config import settings
-from agentic_qa.evals.requirements.cases import (
-    CASES,
-    RequirementEvaluationCase,
-)
-from agentic_qa.models import RequirementAnalysis
+from agentic_qa.evals.requirements.cases import CASES
+from agentic_qa.evals.requirements.evaluator import evaluate_analysis
 from agentic_qa.requirements.llm_analyzer import LLMRequirementAnalyzer
-
-
-@dataclass
-class CheckResult:
-    name: str
-    passed: bool
-    message: str
-
-
-def contains_terms(
-    values: list[str],
-    terms: list[str],
-) -> bool:
-    text = " ".join(values).lower()
-
-    return all(term.lower() in text for term in terms)
-
-
-def contains_alternatives(
-    values: list[str],
-    alternatives: list[list[str]],
-) -> bool:
-    text = " ".join(values).lower()
-
-    return all(any(alternative.lower() in text for alternative in group) for group in alternatives)
-
-
-def evaluate_case(
-    case: RequirementEvaluationCase,
-    analysis: RequirementAnalysis,
-) -> list[CheckResult]:
-
-    results: list[CheckResult] = []
-
-    results.append(
-        CheckResult(
-            name="interaction_surface",
-            passed=(analysis.interaction_surface == case.expected_surface),
-            message=(
-                f"expected={case.expected_surface.value}, "
-                f"actual={analysis.interaction_surface.value}"
-            ),
-        )
-    )
-
-    if case.required_condition_terms:
-        results.append(
-            CheckResult(
-                name="condition_terms",
-                passed=contains_terms(
-                    analysis.conditions,
-                    case.required_condition_terms,
-                ),
-                message=(f"required terms={case.required_condition_terms}"),
-            )
-        )
-
-    if case.required_condition_alternatives:
-        results.append(
-            CheckResult(
-                name="condition_concepts",
-                passed=contains_alternatives(
-                    analysis.conditions,
-                    case.required_condition_alternatives,
-                ),
-                message=(f"accepted alternatives={case.required_condition_alternatives}"),
-            )
-        )
-
-    if case.required_outcome_terms:
-        passed = contains_terms(
-            analysis.expected_outcomes,
-            case.required_outcome_terms,
-        )
-
-        results.append(
-            CheckResult(
-                name="outcome_terms",
-                passed=passed,
-                message=(f"required terms={case.required_outcome_terms}"),
-            )
-        )
-
-    if case.required_outcome_alternatives:
-        results.append(
-            CheckResult(
-                name="outcome_concepts",
-                passed=contains_alternatives(
-                    analysis.expected_outcomes,
-                    case.required_outcome_alternatives,
-                ),
-                message=(f"accepted alternatives={case.required_outcome_alternatives}"),
-            )
-        )
-
-    if case.require_ambiguities is not None:
-        has_ambiguities = bool(analysis.ambiguities)
-
-        results.append(
-            CheckResult(
-                name="ambiguities",
-                passed=(has_ambiguities == case.require_ambiguities),
-                message=(
-                    f"expected ambiguities="
-                    f"{case.require_ambiguities}, "
-                    f"actual count="
-                    f"{len(analysis.ambiguities)}"
-                ),
-            )
-        )
-
-    return results
 
 
 def main() -> None:
     if settings.openai_api_key is None:
-        raise RuntimeError("OPENAI_API_KEY is not configured.")
+        raise RuntimeError(
+            "OPENAI_API_KEY is not configured."
+        )
 
     if not settings.llm_model:
-        raise RuntimeError("LLM_MODEL is not configured.")
+        raise RuntimeError(
+            "LLM_MODEL is not configured."
+        )
 
     model = ChatOpenAI(
         model=settings.llm_model,
-        api_key=(settings.openai_api_key.get_secret_value()),
+        api_key=settings.openai_api_key,
     )
 
-    analyzer = LLMRequirementAnalyzer(model=model)
+    analyzer = LLMRequirementAnalyzer(
+        model=model
+    )
 
     total_checks = 0
     passed_checks = 0
 
-    machine_results = []
+    machine_results: list[dict[str, object]] = []
 
     print(f"MODEL: {settings.llm_model}")
     print()
@@ -151,11 +42,13 @@ def main() -> None:
         print(f"CASE: {case.name}")
         print()
 
-        analysis = analyzer.analyze(case.requirement)
+        analysis = analyzer.analyze(
+            case.requirement
+        )
 
-        checks = evaluate_case(
-            case,
-            analysis,
+        checks = evaluate_analysis(
+            analysis=analysis,
+            case=case,
         )
 
         print("REQUIREMENT:")
@@ -163,7 +56,11 @@ def main() -> None:
         print()
 
         print("ANALYSIS:")
-        print(analysis.model_dump_json(indent=2))
+        print(
+            analysis.model_dump_json(
+                indent=2
+            )
+        )
 
         print()
         print("CHECKS:")
@@ -177,13 +74,19 @@ def main() -> None:
             else:
                 status = "FAIL"
 
-            print(f"  {status:<4} {check.name:<24} {check.message}")
+            print(
+                f"  {status:<4} "
+                f"{check.name:<24} "
+                f"{check.message}"
+            )
 
         machine_results.append(
             {
                 "case": case.name,
                 "requirement": case.requirement,
-                "analysis": (analysis.model_dump(mode="json")),
+                "analysis": analysis.model_dump(
+                    mode="json"
+                ),
                 "checks": [
                     {
                         "name": check.name,
@@ -197,16 +100,36 @@ def main() -> None:
 
         print()
 
-    score = passed_checks / total_checks if total_checks else 0
+    score = (
+        passed_checks / total_checks
+        if total_checks
+        else 0.0
+    )
 
     print("=" * 80)
     print("SUMMARY")
     print()
-    print(f"Passed: {passed_checks}/{total_checks}")
-    print(f"Score:  {score:.1%}")
+    print(
+        f"Passed: {passed_checks}/{total_checks}"
+    )
+    print(
+        f"Check score: {score:.1%}"
+    )
 
-    with open(
-        "evaluation_results/latest.json",
+    output_dir = Path(
+        "evaluation_results"
+    )
+
+    output_dir.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    output_file = (
+        output_dir / "latest.json"
+    )
+
+    with output_file.open(
         "w",
         encoding="utf-8",
     ) as file:
