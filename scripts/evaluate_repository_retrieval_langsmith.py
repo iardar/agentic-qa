@@ -90,16 +90,16 @@ def main() -> None:
             retrieval_evaluator,
         ],
         experiment_prefix=(
-            "repository-retrieval-v1"
+            "repository-retrieval-v1.1-keyword"
         ),
         metadata={
             "retriever": "keyword",
-            "retrieval_version": "v1",
+            "retrieval_version": "v1.1",
+            "corpus": "realworld-transition",
         },
     )
 
     print(results)
-
 
 if __name__ == "__main__":
     main()
