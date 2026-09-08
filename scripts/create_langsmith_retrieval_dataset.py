@@ -1,6 +1,6 @@
 from langsmith import Client
 
-from agentic_qa.evals.retrieval.cases import REALWORLD_CASES
+from agentic_qa.evals.retrieval.cases import REAL_WORLD_CASES
 
 
 DATASET_NAME = "repository-retrieval-realworld-v1"
@@ -50,7 +50,7 @@ def main() -> None:
 
     new_examples = []
 
-    for case in REALWORLD_CASES:
+    for case in REAL_WORLD_CASES:
         if case.name in existing_case_names:
             continue
 

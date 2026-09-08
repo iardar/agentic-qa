@@ -2,20 +2,17 @@ import os
 
 import pytest
 
-from sample_automation.data.user_builder import TestUser
+from sample_automation.data.user_builder import (
+    TestUser,
+    build_unique_user,
+)
 
 
 @pytest.fixture
 def registered_user() -> TestUser:
-    username = os.getenv(
-        "REALWORLD_TEST_USERNAME"
-    )
-    email = os.getenv(
-        "REALWORLD_TEST_EMAIL"
-    )
-    password = os.getenv(
-        "REALWORLD_TEST_PASSWORD"
-    )
+    username = os.getenv("REALWORLD_TEST_USERNAME")
+    email = os.getenv("REALWORLD_TEST_EMAIL")
+    password = os.getenv("REALWORLD_TEST_PASSWORD")
 
     if not username:
         raise RuntimeError(
@@ -37,3 +34,8 @@ def registered_user() -> TestUser:
         email=email,
         password=password,
     )
+
+
+@pytest.fixture
+def new_user() -> TestUser:
+    return build_unique_user()

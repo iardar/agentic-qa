@@ -16,15 +16,10 @@ class RegisterPage(BasePage):
             base_url=base_url,
         )
 
-        self.username_input = page.get_by_placeholder(
-            "Username"
-        )
-        self.email_input = page.get_by_placeholder(
-            "Email"
-        )
-        self.password_input = page.get_by_placeholder(
-            "Password"
-        )
+        self.username_input = page.get_by_placeholder("Username")
+        self.email_input = page.get_by_placeholder("Email")
+        self.password_input = page.get_by_placeholder("Password")
+
         self.sign_up_button = page.get_by_role(
             "button",
             name="Sign up",
@@ -37,7 +32,7 @@ class RegisterPage(BasePage):
     def open(self) -> None:
         self.open_path(self.PATH)
 
-    def register(
+    def fill_registration_form(
         self,
         username: str,
         email: str,
@@ -46,6 +41,18 @@ class RegisterPage(BasePage):
         self.username_input.fill(username)
         self.email_input.fill(email)
         self.password_input.fill(password)
+
+    def register(
+        self,
+        username: str,
+        email: str,
+        password: str,
+    ) -> None:
+        self.fill_registration_form(
+            username=username,
+            email=email,
+            password=password,
+        )
         self.sign_up_button.click()
 
     def registration_errors(self) -> Locator:

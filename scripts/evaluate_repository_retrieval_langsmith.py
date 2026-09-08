@@ -96,7 +96,7 @@ def main() -> None:
         metadata={
             "retriever": "keyword",
             "retrieval_version": "v1.1",
-            "corpus": "realworld-transition",
+            "corpus": "realworld",
         },
     )
 
