@@ -1,10 +1,10 @@
 from langsmith import Client
-
+from dotenv import load_dotenv
 from agentic_qa.evals.retrieval.cases import REAL_WORLD_CASES
 
 
+load_dotenv()
 DATASET_NAME = "repository-retrieval-realworld-v1"
-
 
 
 def main() -> None:
