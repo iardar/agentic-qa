@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   unit-tests:
-    name: Unit tests
+    name: ruff, mypy & unit tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
