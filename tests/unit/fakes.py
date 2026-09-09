@@ -17,9 +17,7 @@ class FakeRequirementAnalyzer:
         return RequirementAnalysis(
             feature="Component management",
             operation="Delete an existing component",
-            objective=(
-                "Verify that an existing component can be deleted."
-            ),
+            objective=("Verify that an existing component can be deleted."),
             actors=[
                 "User",
             ],
@@ -32,11 +30,10 @@ class FakeRequirementAnalyzer:
             ambiguities=[
                 "The interaction surface is not specified.",
             ],
-            interaction_surface=(
-                InteractionSurface.UNKNOWN
-            ),
+            interaction_surface=(InteractionSurface.UNKNOWN),
         )
-    
+
+
 class FakeRepositoryContextProvider:
     def retrieve(
         self,

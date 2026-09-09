@@ -20,8 +20,8 @@ class QANode(Protocol):
     def __call__(
         self,
         state: QAState,
-    ) -> Any:
-        ...
+    ) -> Any: ...
+
 
 def create_analyze_requirement_node(
     analyzer: RequirementAnalyzer,
@@ -50,26 +50,15 @@ def create_retrieve_context_node(
             "keyword_repository_retrieval",
             "chain",
             inputs={
-                "requirement_analysis": (
-                    analysis.model_dump(
-                        mode="json"
-                    )
-                ),
+                "requirement_analysis": (analysis.model_dump(mode="json")),
             },
         ) as run:
-            context = provider.retrieve(
-                analysis
-            )
+            context = provider.retrieve(analysis)
 
             run.end(
                 outputs={
                     "query_terms": context.query_terms,
-                    "items": [
-                        item.model_dump(
-                            mode="json"
-                        )
-                        for item in context.items
-                    ],
+                    "items": [item.model_dump(mode="json") for item in context.items],
                 }
             )
 
@@ -78,6 +67,7 @@ def create_retrieve_context_node(
         }
 
     return retrieve_context
+
 
 def explore_ui(
     state: QAState,
@@ -94,6 +84,7 @@ def explore_ui(
             "UI exploration is not connected yet.",
         ],
     }
+
 
 def design_test(
     state: QAState,

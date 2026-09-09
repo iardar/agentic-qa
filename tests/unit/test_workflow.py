@@ -22,7 +22,6 @@ def test_workflow_processes_requirement() -> None:
 
     assert repository_context.items[0].artifact_type == RepositoryArtifactType.PAGE_OBJECT
 
-
     assert result["requirement_analysis"].feature == "Component management"
 
     assert result["requirement_analysis"].operation == "Delete an existing component"

@@ -16,6 +16,7 @@ from agentic_qa.retrieval.keyword_provider import KeywordRepositoryContextProvid
 
 load_dotenv()
 
+
 def serialize(value: Any) -> Any:
     if isinstance(value, BaseModel):
         return value.model_dump(mode="json")

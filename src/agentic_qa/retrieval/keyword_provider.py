@@ -44,7 +44,6 @@ class KeywordRepositoryContextProvider:
         "successfully",
         "application",
         "page",
-        
     }
 
     IGNORED_DIRECTORIES = {
@@ -197,16 +196,10 @@ class KeywordRepositoryContextProvider:
         self,
         path: Path,
     ) -> RepositoryArtifactType:
-        if (
-            path.name == "conftest.py"
-            or "fixtures" in path.parts
-        ):
+        if path.name == "conftest.py" or "fixtures" in path.parts:
             return RepositoryArtifactType.FIXTURE
 
-        if (
-            "tests" in path.parts
-            and path.name.startswith("test_")
-        ):
+        if "tests" in path.parts and path.name.startswith("test_"):
             return RepositoryArtifactType.TEST
 
         if "pages" in path.parts:
@@ -222,6 +215,7 @@ class KeywordRepositoryContextProvider:
             return RepositoryArtifactType.GUIDELINE
 
         return RepositoryArtifactType.OTHER
+
     def _extract_snippet(
         self,
         content: str,

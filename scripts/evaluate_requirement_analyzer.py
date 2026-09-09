@@ -11,23 +11,17 @@ from agentic_qa.requirements.llm_analyzer import LLMRequirementAnalyzer
 
 def main() -> None:
     if settings.openai_api_key is None:
-        raise RuntimeError(
-            "OPENAI_API_KEY is not configured."
-        )
+        raise RuntimeError("OPENAI_API_KEY is not configured.")
 
     if not settings.llm_model:
-        raise RuntimeError(
-            "LLM_MODEL is not configured."
-        )
+        raise RuntimeError("LLM_MODEL is not configured.")
 
     model = ChatOpenAI(
         model=settings.llm_model,
         api_key=settings.openai_api_key,
     )
 
-    analyzer = LLMRequirementAnalyzer(
-        model=model
-    )
+    analyzer = LLMRequirementAnalyzer(model=model)
 
     total_checks = 0
     passed_checks = 0
@@ -42,9 +36,7 @@ def main() -> None:
         print(f"CASE: {case.name}")
         print()
 
-        analysis = analyzer.analyze(
-            case.requirement
-        )
+        analysis = analyzer.analyze(case.requirement)
 
         checks = evaluate_analysis(
             analysis=analysis,
@@ -56,11 +48,7 @@ def main() -> None:
         print()
 
         print("ANALYSIS:")
-        print(
-            analysis.model_dump_json(
-                indent=2
-            )
-        )
+        print(analysis.model_dump_json(indent=2))
 
         print()
         print("CHECKS:")
@@ -74,19 +62,13 @@ def main() -> None:
             else:
                 status = "FAIL"
 
-            print(
-                f"  {status:<4} "
-                f"{check.name:<24} "
-                f"{check.message}"
-            )
+            print(f"  {status:<4} {check.name:<24} {check.message}")
 
         machine_results.append(
             {
                 "case": case.name,
                 "requirement": case.requirement,
-                "analysis": analysis.model_dump(
-                    mode="json"
-                ),
+                "analysis": analysis.model_dump(mode="json"),
                 "checks": [
                     {
                         "name": check.name,
@@ -100,34 +82,22 @@ def main() -> None:
 
         print()
 
-    score = (
-        passed_checks / total_checks
-        if total_checks
-        else 0.0
-    )
+    score = passed_checks / total_checks if total_checks else 0.0
 
     print("=" * 80)
     print("SUMMARY")
     print()
-    print(
-        f"Passed: {passed_checks}/{total_checks}"
-    )
-    print(
-        f"Check score: {score:.1%}"
-    )
+    print(f"Passed: {passed_checks}/{total_checks}")
+    print(f"Check score: {score:.1%}")
 
-    output_dir = Path(
-        "evaluation_results"
-    )
+    output_dir = Path("evaluation_results")
 
     output_dir.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    output_file = (
-        output_dir / "latest.json"
-    )
+    output_file = output_dir / "latest.json"
 
     with output_file.open(
         "w",

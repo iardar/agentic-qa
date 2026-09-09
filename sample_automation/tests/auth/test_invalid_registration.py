@@ -16,10 +16,6 @@ def test_user_cannot_register_without_username(
         password=new_user.password,
     )
 
-    expect(
-        register_page.sign_up_button
-    ).to_be_disabled()
+    expect(register_page.sign_up_button).to_be_disabled()
 
-    expect(register_page.page).to_have_url(
-        f"{register_page.base_url}/register"
-    )
+    expect(register_page.page).to_have_url(f"{register_page.base_url}/register")

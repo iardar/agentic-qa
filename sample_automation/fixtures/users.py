@@ -15,19 +15,13 @@ def registered_user() -> TestUser:
     password = os.getenv("REALWORLD_TEST_PASSWORD")
 
     if not username:
-        raise RuntimeError(
-            "REALWORLD_TEST_USERNAME is not configured."
-        )
+        raise RuntimeError("REALWORLD_TEST_USERNAME is not configured.")
 
     if not email:
-        raise RuntimeError(
-            "REALWORLD_TEST_EMAIL is not configured."
-        )
+        raise RuntimeError("REALWORLD_TEST_EMAIL is not configured.")
 
     if not password:
-        raise RuntimeError(
-            "REALWORLD_TEST_PASSWORD is not configured."
-        )
+        raise RuntimeError("REALWORLD_TEST_PASSWORD is not configured.")
 
     return TestUser(
         username=username,

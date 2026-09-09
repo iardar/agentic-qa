@@ -27,32 +27,22 @@ provider = KeywordRepositoryContextProvider(
     top_k=8,
 )
 
+
 def target(
     inputs: dict[str, Any],
 ) -> dict[str, Any]:
-    analysis = RequirementAnalysis.model_validate(
-        inputs["analysis"]
-    )
+    analysis = RequirementAnalysis.model_validate(inputs["analysis"])
 
-    context = provider.retrieve(
-        analysis
-    )
+    context = provider.retrieve(analysis)
 
-    return {
-        "repository_context": (
-            context.model_dump(
-                mode="json"
-            )
-        )
-    }
+    return {"repository_context": (context.model_dump(mode="json"))}
+
 
 def retrieval_evaluator(
     outputs: dict[str, Any],
     reference_outputs: dict[str, Any],
 ) -> dict[str, Any]:
-    context = RepositoryContext.model_validate(
-        outputs["repository_context"]
-    )
+    context = RepositoryContext.model_validate(outputs["repository_context"])
 
     metrics = calculate_retrieval_metrics(
         context=context,
@@ -80,6 +70,7 @@ def retrieval_evaluator(
         ]
     }
 
+
 def main() -> None:
     client = Client()
 
@@ -89,9 +80,7 @@ def main() -> None:
         evaluators=[
             retrieval_evaluator,
         ],
-        experiment_prefix=(
-            "repository-retrieval-realworld-v1"            
-        ),
+        experiment_prefix=("repository-retrieval-realworld-v1"),
         metadata={
             "retriever": "keyword",
             "retrieval_version": "v1.1",
@@ -100,6 +89,7 @@ def main() -> None:
     )
 
     print(results)
+
 
 if __name__ == "__main__":
     main()

@@ -23,10 +23,7 @@ REAL_WORLD_CASES = [
             ],
             expected_outcomes=[
                 "The user can successfully sign in using the valid email and password.",
-                (
-                    "The signed-in user's username is visible "
-                    "in the application navigation."
-                ),
+                ("The signed-in user's username is visible in the application navigation."),
             ],
             ambiguities=[],
             interaction_surface=InteractionSurface.UI,
@@ -38,15 +35,11 @@ REAL_WORLD_CASES = [
             "components/navigation.py",
         ],
     ),
-
     RetrievalEvaluationCase(
         name="realworld_invalid_password_login",
         analysis=RequirementAnalysis(
             feature="User authentication",
-            operation=(
-                "Sign in with a valid registered email "
-                "and an invalid password"
-            ),
+            operation=("Sign in with a valid registered email and an invalid password"),
             objective=(
                 "Verify that an unsuccessful sign-in attempt "
                 "displays an authentication error and keeps "
@@ -57,10 +50,7 @@ REAL_WORLD_CASES = [
             ],
             conditions=[
                 "The user is on the Sign in page.",
-                (
-                    "The user enters a valid email associated "
-                    "with a registered user."
-                ),
+                ("The user enters a valid email associated with a registered user."),
                 "The user enters an invalid password.",
                 "The user clicks Sign in.",
             ],
@@ -77,7 +67,6 @@ REAL_WORLD_CASES = [
             "fixtures/users.py",
         ],
     ),
-
     RetrievalEvaluationCase(
         name="realworld_registration",
         analysis=RequirementAnalysis(
@@ -100,10 +89,7 @@ REAL_WORLD_CASES = [
             ],
             expected_outcomes=[
                 "The user is registered successfully.",
-                (
-                    "The registered user's username is visible "
-                    "in the application navigation."
-                ),
+                ("The registered user's username is visible in the application navigation."),
             ],
             ambiguities=[],
             interaction_surface=InteractionSurface.UI,
@@ -115,7 +101,6 @@ REAL_WORLD_CASES = [
             "components/navigation.py",
         ],
     ),
-
     RetrievalEvaluationCase(
         name="realworld_missing_username_registration",
         analysis=RequirementAnalysis(

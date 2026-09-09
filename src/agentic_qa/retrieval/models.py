@@ -12,6 +12,7 @@ class RepositoryArtifactType(StrEnum):
     GUIDELINE = "guideline"
     OTHER = "other"
 
+
 class RetrievedContextItem(BaseModel):
     path: str
 

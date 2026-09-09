@@ -25,9 +25,7 @@ class RegisterPage(BasePage):
             name="Sign up",
         )
 
-        self.error_messages = page.locator(
-            ".error-messages"
-        )
+        self.error_messages = page.locator(".error-messages")
 
     def open(self) -> None:
         self.open_path(self.PATH)

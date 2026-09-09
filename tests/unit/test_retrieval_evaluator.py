@@ -13,9 +13,7 @@ def make_item(
 ) -> RetrievedContextItem:
     return RetrievedContextItem(
         path=path,
-        artifact_type=(
-            RepositoryArtifactType.OTHER
-        ),
+        artifact_type=(RepositoryArtifactType.OTHER),
         score=1.0,
         matched_terms=[],
         snippet="",
@@ -44,12 +42,8 @@ def test_calculates_retrieval_metrics() -> None:
 
     assert metrics.top1_relevant is True
 
-    assert metrics.precision_at_3 == (
-        2 / 3
-    )
+    assert metrics.precision_at_3 == (2 / 3)
 
-    assert metrics.recall_at_3 == (
-        2 / 3
-    )
+    assert metrics.recall_at_3 == (2 / 3)
 
     assert metrics.recall_at_5 == 1.0

@@ -18,8 +18,4 @@ def test_user_can_register(
         password=new_user.password,
     )
 
-    expect(
-        home_page.navigation.user_profile_link(
-            new_user.username
-        )
-    ).to_be_visible()
+    expect(home_page.navigation.user_profile_link(new_user.username)).to_be_visible()

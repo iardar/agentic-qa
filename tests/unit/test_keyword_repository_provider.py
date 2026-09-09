@@ -130,8 +130,6 @@ def existing_todo():
     assert artifact_types["tests/conftest.py"] == RepositoryArtifactType.FIXTURE
 
 
-
-
 def test_raises_error_when_repository_does_not_exist(
     tmp_path: Path,
 ) -> None:

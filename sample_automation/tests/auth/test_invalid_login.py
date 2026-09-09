@@ -15,10 +15,6 @@ def test_valid_user_invalid_password(
         password="invalid-password",
     )
 
-    expect(
-        login_page.authentication_error()
-    ).to_contain_text("credentials invalid")
+    expect(login_page.authentication_error()).to_contain_text("credentials invalid")
 
-    expect(login_page.page).to_have_url(
-        f"{login_page.base_url}/login"
-    )
+    expect(login_page.page).to_have_url(f"{login_page.base_url}/login")
