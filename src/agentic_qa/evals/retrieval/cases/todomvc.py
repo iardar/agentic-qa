@@ -1,24 +1,7 @@
-from pydantic import BaseModel, Field
-from dotenv import load_dotenv
+from agentic_qa.evals.retrieval.models import RetrievalEvaluationCase
+from agentic_qa.models import InteractionSurface, RequirementAnalysis
 
-from agentic_qa.models import (
-    InteractionSurface,
-    RequirementAnalysis,
-)
-
-load_dotenv()
-
-class RetrievalEvaluationCase(BaseModel):
-    name: str
-
-    analysis: RequirementAnalysis
-
-    required_paths: list[str] = Field(
-        default_factory=list
-    )
-
-
-CASES = [
+TODOMVC_CASES = [
     RetrievalEvaluationCase(
         name="complete_existing_todo",
         analysis=RequirementAnalysis(

@@ -6,10 +6,11 @@ from pydantic import BaseModel, Field
 class RepositoryArtifactType(StrEnum):
     TEST = "test"
     PAGE_OBJECT = "page_object"
+    COMPONENT = "component"
     FIXTURE = "fixture"
+    TEST_DATA = "test_data"
     GUIDELINE = "guideline"
     OTHER = "other"
-
 
 class RetrievedContextItem(BaseModel):
     path: str

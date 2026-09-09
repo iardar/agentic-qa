@@ -37,6 +37,14 @@ class KeywordRepositoryContextProvider:
         "their",
         "they",
         "them",
+        # Generic requirement language
+        "can",
+        "has",
+        "using",
+        "successfully",
+        "application",
+        "page",
+        
     }
 
     IGNORED_DIRECTORIES = {
@@ -189,20 +197,31 @@ class KeywordRepositoryContextProvider:
         self,
         path: Path,
     ) -> RepositoryArtifactType:
-        if path.name == "conftest.py":
+        if (
+            path.name == "conftest.py"
+            or "fixtures" in path.parts
+        ):
             return RepositoryArtifactType.FIXTURE
 
-        if "tests" in path.parts and path.name.startswith("test_"):
+        if (
+            "tests" in path.parts
+            and path.name.startswith("test_")
+        ):
             return RepositoryArtifactType.TEST
 
         if "pages" in path.parts:
             return RepositoryArtifactType.PAGE_OBJECT
 
+        if "components" in path.parts:
+            return RepositoryArtifactType.COMPONENT
+
+        if "data" in path.parts:
+            return RepositoryArtifactType.TEST_DATA
+
         if path.suffix == ".md":
             return RepositoryArtifactType.GUIDELINE
 
         return RepositoryArtifactType.OTHER
-
     def _extract_snippet(
         self,
         content: str,

@@ -8,7 +8,10 @@ class BasePage:
         base_url: str,
     ) -> None:
         self.page = page
-        self.base_url = base_url
+        self.base_url = base_url.rstrip("/")
 
-    def open(self) -> None:
-        self.page.goto(self.base_url)
+    def open_path(
+        self,
+        path: str,
+    ) -> None:
+        self.page.goto(f"{self.base_url}{path}")
