@@ -1,4 +1,5 @@
 from typing import Any
+
 from dotenv import load_dotenv
 from langsmith import Client
 
@@ -48,38 +49,36 @@ def target(
 def retrieval_evaluator(
     outputs: dict[str, Any],
     reference_outputs: dict[str, Any],
-) -> list[dict[str, Any]]:
+) -> dict[str, Any]:
     context = RepositoryContext.model_validate(
         outputs["repository_context"]
     )
 
-    required_paths = reference_outputs[
-        "required_paths"
-    ]
-
     metrics = calculate_retrieval_metrics(
         context=context,
-        required_paths=required_paths,
+        required_paths=reference_outputs["required_paths"],
     )
 
-    return [
-        {
-            "key": "top1_relevant",
-            "score": metrics.top1_relevant,
-        },
-        {
-            "key": "precision_at_3",
-            "score": metrics.precision_at_3,
-        },
-        {
-            "key": "recall_at_3",
-            "score": metrics.recall_at_3,
-        },
-        {
-            "key": "recall_at_5",
-            "score": metrics.recall_at_5,
-        },
-    ]
+    return {
+        "results": [
+            {
+                "key": "top1_relevant",
+                "score": metrics.top1_relevant,
+            },
+            {
+                "key": "precision_at_3",
+                "score": metrics.precision_at_3,
+            },
+            {
+                "key": "recall_at_3",
+                "score": metrics.recall_at_3,
+            },
+            {
+                "key": "recall_at_5",
+                "score": metrics.recall_at_5,
+            },
+        ]
+    }
 
 def main() -> None:
     client = Client()

@@ -3,8 +3,8 @@ import json
 from typing import Any
 
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
 from langchain_core.runnables import RunnableConfig
+from langchain_openai import ChatOpenAI
 from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel
 

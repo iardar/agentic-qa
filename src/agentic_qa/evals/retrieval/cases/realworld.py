@@ -1,7 +1,6 @@
 from agentic_qa.evals.retrieval.models import RetrievalEvaluationCase
 from agentic_qa.models import InteractionSurface, RequirementAnalysis
 
-
 REAL_WORLD_CASES = [
     RetrievalEvaluationCase(
         name="realworld_login",

@@ -1,5 +1,6 @@
-from langsmith import Client
 from dotenv import load_dotenv
+from langsmith import Client
+
 from agentic_qa.evals.requirements.cases import CASES
 
 load_dotenv()

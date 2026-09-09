@@ -1,4 +1,5 @@
 from typing import Any
+
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langsmith import Client
@@ -102,30 +103,24 @@ def requirement_analysis_evaluator(
     inputs: dict[str, Any],
     outputs: dict[str, Any],
     reference_outputs: dict[str, Any],
-) -> list[dict[str, Any]]:
+) -> dict[str, Any]:
     analysis = RequirementAnalysis.model_validate(
         outputs["analysis"]
     )
 
-    case = build_case(
-        inputs,
-        reference_outputs,
-    )
+    case = build_case(inputs, reference_outputs)
+    checks = evaluate_analysis(analysis, case)
 
-    checks = evaluate_analysis(
-        analysis,
-        case,
-    )
-
-    return [
-        {
-            "key": check.name,
-            "score": check.passed,
-            "comment": check.message,
-        }
-        for check in checks
-    ]
-
+    return {
+        "results": [
+            {
+                "key": check.name,
+                "score": check.passed,
+                "comment": check.message,
+            }
+            for check in checks
+        ]
+    }
 
 def case_pass_evaluator(
     inputs: dict[str, Any],

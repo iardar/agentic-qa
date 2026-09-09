@@ -1,18 +1,20 @@
 from typing import Any, Protocol
+
 import langsmith as ls
 
 from agentic_qa.graph.state import QAState
 from agentic_qa.models import (
     ExecutionStatus,
+    InteractionSurface,
     RequirementAnalysis,
     ResultAnalysis,
     TestDesign,
     TestExecutionResult,
-    InteractionSurface,
 )
 from agentic_qa.requirements.analyzer import RequirementAnalyzer
 from agentic_qa.retrieval.models import RepositoryContext
 from agentic_qa.retrieval.provider import RepositoryContextProvider
+
 
 class QANode(Protocol):
     def __call__(

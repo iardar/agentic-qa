@@ -1,14 +1,11 @@
-from agentic_qa.models import RequirementAnalysis
+from agentic_qa.models import (
+    InteractionSurface,
+    RequirementAnalysis,
+)
 from agentic_qa.retrieval.models import (
     RepositoryArtifactType,
     RepositoryContext,
     RetrievedContextItem,
-)
-
-
-from agentic_qa.models import (
-    InteractionSurface,
-    RequirementAnalysis,
 )
 
 
