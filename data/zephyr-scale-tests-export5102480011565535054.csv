@@ -1,0 +1,63 @@
+﻿Key,Name,Status,Precondition,Objective,Folder,Priority,Component,Labels,Owner,Estimated Time,Coverage (Issues),Coverage (Pages),Test Script (Step-by-Step) - Step,Test Script (Step-by-Step) - Test Data,Test Script (Step-by-Step) - Expected Result,Test Script (Plain Text),Test Script (BDD)
+P10020416-T373,TP-TASK-001,Draft,User is on TP home page.,Validate that the user can successfully create a checklist,/Training Portal/Plan,Normal,,"Checklist, E2E, TP, Automation",JIRAUSER94235,,,,Navigate to Menu -> Training Plans & Checklist > Generic ,N/A,"   1. Training Plans & Checklist  page is opened
+   2. Add New Module button is available",,
+,,,,,,,,,,,,,Click on Create New Plan button,N/A,Create New Plan modal is opened,,
+,,,,,,,,,,,,,"Fill the test data:
+   1. Team
+   2. Due Period (Days)
+   3. Description
+   4. Recurrence (Days - 0 for non-recurrent plans)
+   5. Ducument title
+   6. Priority
+   7. Target Audience","   1. test data : Team
+   2. test data : Due Period
+   3. test data : Description
+   4. test data : Recurrence (Days - 0 for non-recurrent plans)
+   5. test data : Ducument title
+   6. test data : Priority
+   7. test data : Target Audience",Mentioned fields are successfully filled,,
+,,,,,,,,,,,,,"Click on Training Checklist.
+
+",N/A,"The Add New Task button is displayed.
+
+",,
+,,,,,,,,,,,,,"Click on Add New Task.
+
+",N/A,"A new task entry form is displayed.
+
+",,
+,,,,,,,,,,,,,"Fill the test data:
+   1. Task Name.
+   2. Task Description.
+   3. Hours and Minutes.
+
+
+
+","   1. Task Name
+   2. Task Description
+   3. Hours and Minutes",Mentioned fields are successfully filled,,
+,,,,,,,,,,,,,"Click on Add Task.
+
+",Entered task details,"The task is added to the task list with the entered details.
+
+",,
+,,,,,,,,,,,,,Click on Save All Tasks.,"Added task(s)
+
+","All tasks are saved successfully and a confirmation message is displayed.
+
+",,
+,,,,,,,,,,,,,"Click on Publish Training Plan.
+
+","Saved training plan
+
+","A popup is displayed with the message: ""Success! Training Plan: [Document 
+Title] is saved"".",,
+,,,,,,,,,,,,,Click Close on success message popup,N/A,"The popup closes successfully.
+
+",,
+,,,,,,,,,,,,,"Click on Created/Updated to sort/filter the module list by the latest check 
+date.",N/A,"The module list is updated, and the most recently created module is 
+displayed as the first item in the list.
+
+",,
+,,,,,,,,,,,,,Close the browser,N/A,N/A,,
