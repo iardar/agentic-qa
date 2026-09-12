@@ -25,11 +25,7 @@ def test_reader_groups_multiple_rows_into_one_test_case() -> None:
             "Verify task creation,/Tasks,Normal,,E2E,owner1,,,,"
             "Open Tasks,N/A,Tasks page is opened,,\n"
         )
-        + (
-            ",,,,,,,,,,,,,"
-            "Click Create,test data : Task,"
-            "Create dialog is opened,,\n"
-        )
+        + (",,,,,,,,,,,,,Click Create,test data : Task,Create dialog is opened,,\n")
     )
 
     test_cases = _read_zephyr_csv(StringIO(csv_text))
@@ -56,14 +52,8 @@ def test_reader_groups_multiple_rows_into_one_test_case() -> None:
 def test_reader_starts_new_test_case_when_key_is_present() -> None:
     csv_text = (
         CSV_HEADER
-        + (
-            "TEST-T1,Create task,Draft,,,/Tasks,Normal,,,,,,,"
-            "Create task,N/A,Task is created,,\n"
-        )
-        + (
-            "TEST-T2,Delete task,Draft,,,/Tasks,Normal,,,,,,,"
-            "Delete task,N/A,Task is deleted,,\n"
-        )
+        + ("TEST-T1,Create task,Draft,,,/Tasks,Normal,,,,,,,Create task,N/A,Task is created,,\n")
+        + ("TEST-T2,Delete task,Draft,,,/Tasks,Normal,,,,,,,Delete task,N/A,Task is deleted,,\n")
     )
 
     test_cases = _read_zephyr_csv(StringIO(csv_text))
@@ -74,13 +64,7 @@ def test_reader_starts_new_test_case_when_key_is_present() -> None:
 
 
 def test_reader_converts_blank_optional_values_to_none() -> None:
-    csv_text = (
-        CSV_HEADER
-        + (
-            "TEST-T1,Create task,,,,,,,,,,,,"
-            "Click Create,,, ,\n"
-        )
-    )
+    csv_text = CSV_HEADER + ("TEST-T1,Create task,,,,,,,,,,,,Click Create,,, ,\n")
 
     test_cases = _read_zephyr_csv(StringIO(csv_text))
 
@@ -93,13 +77,7 @@ def test_reader_converts_blank_optional_values_to_none() -> None:
 
 
 def test_reader_rejects_continuation_row_without_parent_case() -> None:
-    csv_text = (
-        CSV_HEADER
-        + (
-            ",,,,,,,,,,,,,"
-            "Click Create,N/A,Dialog opened,,\n"
-        )
-    )
+    csv_text = CSV_HEADER + (",,,,,,,,,,,,,Click Create,N/A,Dialog opened,,\n")
 
     with pytest.raises(
         ZephyrCsvImportError,

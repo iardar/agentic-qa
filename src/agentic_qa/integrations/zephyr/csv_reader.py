@@ -38,8 +38,7 @@ def _read_zephyr_csv(csv_file: TextIO) -> list[ZephyrTestCase]:
 
         if not current_rows:
             raise ZephyrCsvImportError(
-                "Encountered a continuation row before a test case "
-                f"at CSV row {row_number}."
+                f"Encountered a continuation row before a test case at CSV row {row_number}."
             )
 
         current_rows.append(row)
@@ -96,8 +95,4 @@ def _optional_text(value: str) -> str | None:
 
 
 def _parse_labels(value: str) -> list[str]:
-    return [
-        label.strip()
-        for label in value.split(",")
-        if label.strip()
-    ]
+    return [label.strip() for label in value.split(",") if label.strip()]

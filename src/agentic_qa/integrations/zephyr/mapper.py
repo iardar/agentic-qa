@@ -45,10 +45,7 @@ def map_zephyr_test_cases(
 ) -> list[QATestCase]:
     """Map multiple Zephyr test cases into Agentic QA domain models."""
 
-    return [
-        map_zephyr_test_case(test_case)
-        for test_case in test_cases
-    ]
+    return [map_zephyr_test_case(test_case) for test_case in test_cases]
 
 
 def _map_preconditions(precondition: str | None) -> list[str]:
