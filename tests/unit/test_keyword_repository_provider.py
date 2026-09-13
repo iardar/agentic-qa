@@ -143,12 +143,9 @@ def test_raises_error_when_repository_does_not_exist(
     with pytest.raises(FileNotFoundError):
         provider.retrieve(create_analysis())
 
+
 def test_tokenize_splits_python_identifiers() -> None:
-    tokens = _tokenize(
-        "test_registered_user "
-        "LoginPage "
-        "sign_in_button"
-    )
+    tokens = _tokenize("test_registered_user LoginPage sign_in_button")
 
     assert tokens == [
         "test",
@@ -163,11 +160,7 @@ def test_tokenize_splits_python_identifiers() -> None:
 
 
 def test_tokenize_preserves_word_boundaries() -> None:
-    tokens = set(
-        _tokenize(
-            "invalid_password registered_user"
-        )
-    )
+    tokens = set(_tokenize("invalid_password registered_user"))
 
     assert "invalid" in tokens
     assert "valid" not in tokens
@@ -175,10 +168,9 @@ def test_tokenize_preserves_word_boundaries() -> None:
     assert "registered" in tokens
     assert "register" not in tokens
 
+
 def test_tokenize_splits_camel_case() -> None:
-    tokens = _tokenize(
-        "RegisterPage RuntimeError"
-    )
+    tokens = _tokenize("RegisterPage RuntimeError")
 
     assert tokens == [
         "register",

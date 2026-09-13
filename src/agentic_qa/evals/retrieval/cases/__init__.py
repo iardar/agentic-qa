@@ -5,5 +5,3 @@ __all__ = [
     "REAL_WORLD_CASES",
     "TODOMVC_CASES",
 ]
-
-

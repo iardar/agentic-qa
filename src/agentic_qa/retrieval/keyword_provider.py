@@ -27,6 +27,7 @@ def _tokenize(text: str) -> list[str]:
         normalized.lower(),
     )
 
+
 class KeywordRepositoryContextProvider:
     SUPPORTED_SUFFIXES = {
         ".py",
@@ -171,13 +172,9 @@ class KeywordRepositoryContextProvider:
 
         relative_path = path.relative_to(self._repository_path)
 
-        path_tokens = set(
-            _tokenize(str(relative_path))
-        )
+        path_tokens = set(_tokenize(str(relative_path)))
 
-        content_tokens = Counter(
-            _tokenize(content)
-        )
+        content_tokens = Counter(_tokenize(content))
 
         score = 0.0
         matched_terms: list[str] = []
