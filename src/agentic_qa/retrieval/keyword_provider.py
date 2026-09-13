@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -9,6 +10,22 @@ from agentic_qa.retrieval.models import (
     RetrievedContextItem,
 )
 
+
+def _tokenize(text: str) -> list[str]:
+    """Split prose and Python identifiers into normalized tokens."""
+
+    normalized = text.replace("_", " ")
+
+    normalized = re.sub(
+        r"(?<=[a-z0-9])(?=[A-Z])",
+        " ",
+        normalized,
+    )
+
+    return re.findall(
+        r"[A-Za-z0-9]+",
+        normalized.lower(),
+    )
 
 class KeywordRepositoryContextProvider:
     SUPPORTED_SUFFIXES = {
@@ -154,8 +171,13 @@ class KeywordRepositoryContextProvider:
 
         relative_path = path.relative_to(self._repository_path)
 
-        path_text = str(relative_path).lower()
-        content_text = content.lower()
+        path_tokens = set(
+            _tokenize(str(relative_path))
+        )
+
+        content_tokens = Counter(
+            _tokenize(content)
+        )
 
         score = 0.0
         matched_terms: list[str] = []
@@ -163,10 +185,10 @@ class KeywordRepositoryContextProvider:
         for term in query_terms:
             term_score = 0.0
 
-            if term in path_text:
+            if term in path_tokens:
                 term_score += 5.0
 
-            occurrences = content_text.count(term)
+            occurrences = content_tokens[term]
 
             if occurrences > 0:
                 term_score += min(
