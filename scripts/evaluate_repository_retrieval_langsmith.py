@@ -19,7 +19,7 @@ from agentic_qa.retrieval.models import (
 
 load_dotenv()
 
-DATASET_NAME = "realworld-retrieval-v1.2-token-aware"
+DATASET_NAME = "repository-retrieval-realworld-v1"
 
 
 provider = KeywordRepositoryContextProvider(
