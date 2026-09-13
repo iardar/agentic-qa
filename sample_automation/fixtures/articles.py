@@ -91,6 +91,7 @@ def article_update(
         title=existing_article.title,
     )
 
+
 @pytest.fixture
 def editor_page(
     page: Page,

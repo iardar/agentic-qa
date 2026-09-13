@@ -24,13 +24,8 @@ def build_unique_article() -> TestArticle:
 
     return TestArticle(
         title=f"Agentic QA Article {suffix}",
-        description=(
-            f"Article description {suffix}"
-        ),
-        body=(
-            "Article body created by the "
-            "Agentic QA automation framework."
-        ),
+        description=(f"Article description {suffix}"),
+        body=("Article body created by the Agentic QA automation framework."),
         tags=[
             "agentic-qa",
             f"test-{suffix}",
@@ -45,13 +40,8 @@ def build_article_update(
 
     return TestArticle(
         title=title,
-        description=(
-            f"Updated article description {suffix}"
-        ),
-        body=(
-            "Updated article body created by the "
-            "Agentic QA automation framework."
-        ),
+        description=(f"Updated article description {suffix}"),
+        body=("Updated article body created by the Agentic QA automation framework."),
         tags=[
             "agentic-qa",
             "updated",

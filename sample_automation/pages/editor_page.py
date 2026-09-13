@@ -17,21 +17,13 @@ class EditorPage(BasePage):
             base_url=base_url,
         )
 
-        self.title_input = page.get_by_placeholder(
-            "Article Title"
-        )
+        self.title_input = page.get_by_placeholder("Article Title")
 
-        self.description_input = page.get_by_placeholder(
-            "What's this article about?"
-        )
+        self.description_input = page.get_by_placeholder("What's this article about?")
 
-        self.body_input = page.get_by_placeholder(
-            "Write your article (in markdown)"
-        )
+        self.body_input = page.get_by_placeholder("Write your article (in markdown)")
 
-        self.tag_input = page.get_by_placeholder(
-            "Enter tags"
-        )
+        self.tag_input = page.get_by_placeholder("Enter tags")
 
         self.publish_button = page.get_by_role(
             "button",
@@ -45,29 +37,19 @@ class EditorPage(BasePage):
         self,
         slug: str,
     ) -> None:
-        self.open_path(
-            f"/editor/{slug}"
-        )
+        self.open_path(f"/editor/{slug}")
 
     def fill_article_form(
         self,
         article: TestArticle,
     ) -> None:
-        self.title_input.fill(
-            article.title
-        )
+        self.title_input.fill(article.title)
 
-        self.description_input.fill(
-            article.description
-        )
+        self.description_input.fill(article.description)
 
-        self.body_input.fill(
-            article.body
-        )
+        self.body_input.fill(article.body)
 
-        self._fill_tags(
-            article.tags
-        )
+        self._fill_tags(article.tags)
 
     def publish(self) -> None:
         self.publish_button.click()

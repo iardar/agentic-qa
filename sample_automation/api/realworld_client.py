@@ -47,18 +47,12 @@ class RealWorldApiClient:
         user = payload.get("user")
 
         if not isinstance(user, dict):
-            raise RuntimeError(
-                "Login response does not contain "
-                "a user object."
-            )
+            raise RuntimeError("Login response does not contain a user object.")
 
         token = user.get("token")
 
         if not isinstance(token, str):
-            raise RuntimeError(
-                "Login response does not contain "
-                "a valid token."
-            )
+            raise RuntimeError("Login response does not contain a valid token.")
 
         return token
 
@@ -86,9 +80,7 @@ class RealWorldApiClient:
             operation="create article",
         )
 
-        return self._article_from_response(
-            response
-        )
+        return self._article_from_response(response)
 
     def update_article(
         self,
@@ -114,9 +106,7 @@ class RealWorldApiClient:
             operation="update article",
         )
 
-        return self._article_from_response(
-            response
-        )
+        return self._article_from_response(response)
 
     def delete_article(
         self,
@@ -164,10 +154,7 @@ class RealWorldApiClient:
         article = payload.get("article")
 
         if not isinstance(article, dict):
-            raise RuntimeError(
-                "API response does not contain "
-                "an article object."
-            )
+            raise RuntimeError("API response does not contain an article object.")
 
         slug = article.get("slug")
         title = article.get("title")
@@ -176,32 +163,19 @@ class RealWorldApiClient:
         tags = article.get("tagList")
 
         if not isinstance(slug, str):
-            raise RuntimeError(
-                "Article response has invalid slug."
-            )
+            raise RuntimeError("Article response has invalid slug.")
 
         if not isinstance(title, str):
-            raise RuntimeError(
-                "Article response has invalid title."
-            )
+            raise RuntimeError("Article response has invalid title.")
 
         if not isinstance(description, str):
-            raise RuntimeError(
-                "Article response has invalid description."
-            )
+            raise RuntimeError("Article response has invalid description.")
 
         if not isinstance(body, str):
-            raise RuntimeError(
-                "Article response has invalid body."
-            )
+            raise RuntimeError("Article response has invalid body.")
 
-        if not isinstance(tags, list) or not all(
-            isinstance(tag, str)
-            for tag in tags
-        ):
-            raise RuntimeError(
-                "Article response has invalid tagList."
-            )
+        if not isinstance(tags, list) or not all(isinstance(tag, str) for tag in tags):
+            raise RuntimeError("Article response has invalid tagList.")
 
         return CreatedArticle(
             slug=slug,
@@ -221,7 +195,5 @@ class RealWorldApiClient:
             return
 
         raise RuntimeError(
-            f"RealWorld API {operation} failed: "
-            f"status={response.status}, "
-            f"body={response.text()}"
+            f"RealWorld API {operation} failed: status={response.status}, body={response.text()}"
         )

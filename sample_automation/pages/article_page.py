@@ -14,9 +14,7 @@ class ArticlePage(BasePage):
             base_url=base_url,
         )
 
-        self.article_body = page.locator(
-            ".article-content p"
-        )
+        self.article_body = page.locator(".article-content p")
 
         self.edit_button = page.get_by_role(
             "link",
@@ -32,9 +30,7 @@ class ArticlePage(BasePage):
         self,
         slug: str,
     ) -> None:
-        self.open_path(
-            f"/article/{slug}"
-        )
+        self.open_path(f"/article/{slug}")
 
     def title(
         self,

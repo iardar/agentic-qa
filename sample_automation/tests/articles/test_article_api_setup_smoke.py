@@ -10,11 +10,7 @@ def test_existing_article_fixture_creates_article(
 ) -> None:
     response = realworld_api_context.get(
         f"/api/articles/{existing_article.slug}",
-        headers={
-            "Authorization": (
-                f"Token {registered_user_token}"
-            )
-        },
+        headers={"Authorization": (f"Token {registered_user_token}")},
     )
 
     assert response.status == 200
@@ -24,7 +20,5 @@ def test_existing_article_fixture_creates_article(
 
     assert article["slug"] == existing_article.slug
     assert article["title"] == existing_article.title
-    assert article["description"] == (
-        existing_article.description
-    )
+    assert article["description"] == (existing_article.description)
     assert article["body"] == existing_article.body

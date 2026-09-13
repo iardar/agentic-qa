@@ -22,18 +22,8 @@ def test_user_can_create_article(
 ) -> None:
     editor_page.open_new()
 
-    editor_page.create_article(
-        new_article
-    )
+    editor_page.create_article(new_article)
 
-    expect(
-        article_page.title(
-            new_article.title
-        )
-    ).to_be_visible()
+    expect(article_page.title(new_article.title)).to_be_visible()
 
-    expect(
-        article_page.body()
-    ).to_contain_text(
-        new_article.body
-    )
+    expect(article_page.body()).to_contain_text(new_article.body)

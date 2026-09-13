@@ -39,6 +39,7 @@ def home_page(
         base_url=realworld_base_url,
     )
 
+
 @pytest.fixture
 def authenticated_user(
     login_page: LoginPage,
@@ -52,10 +53,6 @@ def authenticated_user(
         password=registered_user.password,
     )
 
-    expect(
-        home_page.navigation.user_profile_link(
-            registered_user.username
-        )
-    ).to_be_visible()
+    expect(home_page.navigation.user_profile_link(registered_user.username)).to_be_visible()
 
     return registered_user
