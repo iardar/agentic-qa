@@ -1,12 +1,12 @@
 from playwright.sync_api import expect
 
-from sample_automation.data.user_builder import TestUser
+from sample_automation.data.user_builder import UserData
 from sample_automation.pages.login_page import LoginPage
 
 
 def test_valid_user_invalid_password(
     login_page: LoginPage,
-    registered_user: TestUser,
+    registered_user: UserData,
 ) -> None:
     login_page.open()
 

@@ -5,6 +5,7 @@ from playwright.sync_api import (
     APIRequestContext,
     Page,
     Playwright,
+    expect,
 )
 
 from sample_automation.api.realworld_client import (
@@ -12,16 +13,16 @@ from sample_automation.api.realworld_client import (
 )
 from sample_automation.data.article_builder import (
     CreatedArticle,
-    TestArticle,
+    ArticleData,
     build_article_update,
     build_unique_article,
 )
 from sample_automation.data.user_builder import (
-    TestUser,
+    UserData,
 )
 from sample_automation.pages.article_page import ArticlePage
 from sample_automation.pages.editor_page import EditorPage
-
+from sample_automation.components.navigation import Navigation
 
 @pytest.fixture
 def realworld_api_context(
@@ -49,7 +50,7 @@ def realworld_api_client(
 @pytest.fixture
 def registered_user_token(
     realworld_api_client: RealWorldApiClient,
-    registered_user: TestUser,
+    registered_user: UserData,
 ) -> str:
     return realworld_api_client.login(
         email=registered_user.email,
@@ -58,7 +59,7 @@ def registered_user_token(
 
 
 @pytest.fixture
-def new_article() -> TestArticle:
+def new_article() -> ArticleData:
     return build_unique_article()
 
 
@@ -86,7 +87,7 @@ def existing_article(
 @pytest.fixture
 def article_update(
     existing_article: CreatedArticle,
-) -> TestArticle:
+) -> ArticleData:
     return build_article_update(
         title=existing_article.title,
     )
@@ -112,3 +113,29 @@ def article_page(
         page=page,
         base_url=realworld_base_url,
     )
+
+@pytest.fixture
+def api_authenticated_user(
+    page: Page,
+    realworld_base_url: str,
+    registered_user: UserData,
+    registered_user_token: str,
+) -> UserData:
+    page.goto(realworld_base_url)
+
+    page.evaluate(
+        "(token) => localStorage.setItem('jwtToken', token)",
+        registered_user_token,
+    )
+
+    page.reload()
+
+    navigation = Navigation(page)
+
+    expect(
+        navigation.user_profile_link(
+            registered_user.username
+        )
+    ).to_be_visible()
+
+    return registered_user

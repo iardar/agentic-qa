@@ -1,6 +1,6 @@
 from playwright.sync_api import expect
 
-from sample_automation.data.user_builder import TestUser
+from sample_automation.data.user_builder import UserData
 from sample_automation.pages.home_page import HomePage
 from sample_automation.pages.register_page import RegisterPage
 
@@ -8,7 +8,7 @@ from sample_automation.pages.register_page import RegisterPage
 def test_user_can_register(
     register_page: RegisterPage,
     home_page: HomePage,
-    new_user: TestUser,
+    new_user: UserData,
 ) -> None:
     register_page.open()
 

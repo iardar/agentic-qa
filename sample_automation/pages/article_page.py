@@ -1,5 +1,6 @@
 from playwright.sync_api import Locator, Page
 
+from sample_automation.components.navigation import Navigation
 from sample_automation.pages.base_page import BasePage
 
 
@@ -14,14 +15,18 @@ class ArticlePage(BasePage):
             base_url=base_url,
         )
 
+        self.navigation = Navigation(page)
+
+        self.banner = page.locator(".banner") 
+
         self.article_body = page.locator(".article-content p")
 
-        self.edit_button = page.get_by_role(
+        self.edit_button = self.banner.get_by_role(
             "link",
             name="Edit Article",
         )
 
-        self.delete_button = page.get_by_role(
+        self.delete_button = self.banner.get_by_role(
             "button",
             name="Delete Article",
         )

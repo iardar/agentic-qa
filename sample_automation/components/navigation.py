@@ -6,14 +6,23 @@ class Navigation:
         self,
         page: Page,
     ) -> None:
-        self.page = page
+        self.root = page.get_by_role("navigation")
+
+        self.home_link = self.root.get_by_role(
+            "link",
+            name="Home",
+            exact=True,
+        )
 
     def user_profile_link(
         self,
         username: str,
     ) -> Locator:
-        return self.page.get_by_role(
+        return self.root.get_by_role(
             "link",
             name=username,
             exact=True,
         )
+
+    def open_home(self) -> None:
+        self.home_link.click()

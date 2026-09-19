@@ -1,7 +1,7 @@
 import pytest
 from playwright.sync_api import Page, expect
 
-from sample_automation.data.user_builder import TestUser
+from sample_automation.data.user_builder import UserData
 from sample_automation.pages.home_page import HomePage
 from sample_automation.pages.login_page import LoginPage
 from sample_automation.pages.register_page import RegisterPage
@@ -44,8 +44,8 @@ def home_page(
 def authenticated_user(
     login_page: LoginPage,
     home_page: HomePage,
-    registered_user: TestUser,
-) -> TestUser:
+    registered_user: UserData,
+) -> UserData:
     login_page.open()
 
     login_page.sign_in(

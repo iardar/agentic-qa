@@ -3,13 +3,13 @@ import os
 import pytest
 
 from sample_automation.data.user_builder import (
-    TestUser,
+    UserData,
     build_unique_user,
 )
 
 
 @pytest.fixture
-def registered_user() -> TestUser:
+def registered_user() -> UserData:
     username = os.getenv("REALWORLD_TEST_USERNAME")
     email = os.getenv("REALWORLD_TEST_EMAIL")
     password = os.getenv("REALWORLD_TEST_PASSWORD")
@@ -23,7 +23,7 @@ def registered_user() -> TestUser:
     if not password:
         raise RuntimeError("REALWORLD_TEST_PASSWORD is not configured.")
 
-    return TestUser(
+    return UserData(
         username=username,
         email=email,
         password=password,
@@ -31,5 +31,5 @@ def registered_user() -> TestUser:
 
 
 @pytest.fixture
-def new_user() -> TestUser:
+def new_user() -> UserData:
     return build_unique_user()

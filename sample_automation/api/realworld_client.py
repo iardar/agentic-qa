@@ -7,7 +7,7 @@ from playwright.sync_api import (
 
 from sample_automation.data.article_builder import (
     CreatedArticle,
-    TestArticle,
+    ArticleData,
 )
 
 
@@ -59,7 +59,7 @@ class RealWorldApiClient:
     def create_article(
         self,
         token: str,
-        article: TestArticle,
+        article: ArticleData,
     ) -> CreatedArticle:
         response = self._request.post(
             "/api/articles",
@@ -86,7 +86,7 @@ class RealWorldApiClient:
         self,
         token: str,
         slug: str,
-        article: TestArticle,
+        article: ArticleData,
     ) -> CreatedArticle:
         response = self._request.put(
             f"/api/articles/{slug}",
@@ -132,6 +132,28 @@ class RealWorldApiClient:
             response=response,
             expected=expected,
             operation="delete article",
+        )
+
+    def article_exists(
+        self,
+        token: str,
+        slug: str,
+    ) -> bool:
+        response = self._request.get(
+            f"/api/articles/{slug}",
+            headers=self._auth_headers(token),
+        )
+
+        if response.status == 200:
+            return True
+
+        if response.status == 404:
+            return False
+
+        raise RuntimeError(
+            "RealWorld API get article failed: "
+            f"status={response.status}, "
+            f"body={response.text()}"
         )
 
     def _auth_headers(

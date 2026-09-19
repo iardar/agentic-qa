@@ -1,6 +1,6 @@
 from playwright.sync_api import Locator, Page
 
-from sample_automation.data.article_builder import TestArticle
+from sample_automation.data.article_builder import ArticleData
 from sample_automation.pages.base_page import BasePage
 
 
@@ -41,7 +41,7 @@ class EditorPage(BasePage):
 
     def fill_article_form(
         self,
-        article: TestArticle,
+        article: ArticleData,
     ) -> None:
         self.title_input.fill(article.title)
 
@@ -56,7 +56,7 @@ class EditorPage(BasePage):
 
     def create_article(
         self,
-        article: TestArticle,
+        article: ArticleData,
     ) -> None:
         self.fill_article_form(article)
         self.publish()

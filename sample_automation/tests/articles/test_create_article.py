@@ -1,10 +1,10 @@
 from playwright.sync_api import expect
 
 from sample_automation.data.article_builder import (
-    TestArticle,
+    ArticleData,
 )
 from sample_automation.data.user_builder import (
-    TestUser,
+    UserData,
 )
 from sample_automation.pages.article_page import (
     ArticlePage,
@@ -15,10 +15,10 @@ from sample_automation.pages.editor_page import (
 
 
 def test_user_can_create_article(
-    authenticated_user: TestUser,
+    authenticated_user: UserData,
     editor_page: EditorPage,
     article_page: ArticlePage,
-    new_article: TestArticle,
+    new_article: ArticleData,
 ) -> None:
     editor_page.open_new()
 
