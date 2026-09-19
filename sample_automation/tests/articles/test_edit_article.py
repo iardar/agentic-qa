@@ -1,8 +1,8 @@
 from playwright.sync_api import expect
 
 from sample_automation.data.article_builder import (
-    CreatedArticle,
     ArticleData,
+    CreatedArticle,
 )
 from sample_automation.data.user_builder import UserData
 from sample_automation.pages.article_page import ArticlePage

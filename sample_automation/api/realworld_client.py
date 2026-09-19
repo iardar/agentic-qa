@@ -6,8 +6,8 @@ from playwright.sync_api import (
 )
 
 from sample_automation.data.article_builder import (
-    CreatedArticle,
     ArticleData,
+    CreatedArticle,
 )
 
 

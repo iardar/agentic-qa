@@ -11,9 +11,10 @@ from playwright.sync_api import (
 from sample_automation.api.realworld_client import (
     RealWorldApiClient,
 )
+from sample_automation.components.navigation import Navigation
 from sample_automation.data.article_builder import (
-    CreatedArticle,
     ArticleData,
+    CreatedArticle,
     build_article_update,
     build_unique_article,
 )
@@ -22,7 +23,7 @@ from sample_automation.data.user_builder import (
 )
 from sample_automation.pages.article_page import ArticlePage
 from sample_automation.pages.editor_page import EditorPage
-from sample_automation.components.navigation import Navigation
+
 
 @pytest.fixture
 def realworld_api_context(
