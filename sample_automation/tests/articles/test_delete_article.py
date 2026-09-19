@@ -20,16 +20,10 @@ def test_user_can_delete_article(
     article_page.open(existing_article.slug)
 
     expect(
-        article_page.navigation.user_profile_link(
-            api_authenticated_user.username
-        )
+        article_page.navigation.user_profile_link(api_authenticated_user.username)
     ).to_be_visible()
 
-    expect(
-        article_page.title(
-            existing_article.title
-        )
-    ).to_be_visible()
+    expect(article_page.title(existing_article.title)).to_be_visible()
 
     assert realworld_api_client.article_exists(
         token=registered_user_token,

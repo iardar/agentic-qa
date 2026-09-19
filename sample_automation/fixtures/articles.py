@@ -115,6 +115,7 @@ def article_page(
         base_url=realworld_base_url,
     )
 
+
 @pytest.fixture
 def api_authenticated_user(
     page: Page,
@@ -133,10 +134,6 @@ def api_authenticated_user(
 
     navigation = Navigation(page)
 
-    expect(
-        navigation.user_profile_link(
-            registered_user.username
-        )
-    ).to_be_visible()
+    expect(navigation.user_profile_link(registered_user.username)).to_be_visible()
 
     return registered_user

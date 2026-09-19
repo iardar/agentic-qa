@@ -151,9 +151,7 @@ class RealWorldApiClient:
             return False
 
         raise RuntimeError(
-            "RealWorld API get article failed: "
-            f"status={response.status}, "
-            f"body={response.text()}"
+            f"RealWorld API get article failed: status={response.status}, body={response.text()}"
         )
 
     def _auth_headers(

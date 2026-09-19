@@ -17,7 +17,7 @@ class ArticlePage(BasePage):
 
         self.navigation = Navigation(page)
 
-        self.banner = page.locator(".banner") 
+        self.banner = page.locator(".banner")
 
         self.article_body = page.locator(".article-content p")
 
