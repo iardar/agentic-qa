@@ -1,5 +1,6 @@
 from playwright.sync_api import Locator, Page
 
+from sample_automation.components.comment import Comment
 from sample_automation.components.navigation import Navigation
 from sample_automation.pages.base_page import BasePage
 
@@ -55,3 +56,30 @@ class ArticlePage(BasePage):
 
     def delete_article(self) -> None:
         self.delete_button.click()
+
+    def add_comment(self, body: str) -> None:
+        """Submit a comment on the current article."""
+        comment_input = self.page.get_by_placeholder(
+            "Write a comment..."
+        )
+
+        post_button = self.page.get_by_role(
+            "button",
+            name="Post Comment",
+            exact=True,
+        )
+
+        comment_input.fill(body)
+        post_button.click()
+
+
+    def comment_by_text(self, body: str) -> Comment:
+        """Return the comment component matching the given body."""
+        comment_root = self.page.locator(".card").filter(
+            has=self.page.locator(
+                ".card-text",
+                has_text=body,
+            )
+        )
+
+        return Comment(comment_root)

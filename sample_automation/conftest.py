@@ -10,6 +10,7 @@ pytest_plugins = (
     "sample_automation.fixtures.authentication",
     "sample_automation.fixtures.users",
     "sample_automation.fixtures.articles",
+    "sample_automation.fixtures.comments",
 )
 
 
