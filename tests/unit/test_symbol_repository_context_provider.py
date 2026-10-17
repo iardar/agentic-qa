@@ -12,15 +12,11 @@ from agentic_qa.retrieval.symbols.provider import (
 )
 
 
-def create_edit_article_analysis(
-) -> RequirementAnalysis:
+def create_edit_article_analysis() -> RequirementAnalysis:
     return RequirementAnalysis(
         feature="Article management",
         operation="Edit article",
-        objective=(
-            "Verify that an authenticated user "
-            "can edit an existing article."
-        ),
+        objective=("Verify that an authenticated user can edit an existing article."),
         actors=[
             "Authenticated user",
         ],
@@ -39,10 +35,7 @@ def create_invalid_login_analysis() -> RequirementAnalysis:
     return RequirementAnalysis(
         feature="Authentication",
         operation="Sign in with invalid password",
-        objective=(
-            "Verify that a registered user cannot sign in "
-            "with an invalid password."
-        ),
+        objective=("Verify that a registered user cannot sign in with an invalid password."),
         actors=[
             "Registered user",
         ],
@@ -58,8 +51,8 @@ def create_invalid_login_analysis() -> RequirementAnalysis:
         interaction_surface=InteractionSurface.UI,
     )
 
-def create_sparse_delete_article_analysis(
-) -> RequirementAnalysis:
+
+def create_sparse_delete_article_analysis() -> RequirementAnalysis:
     return RequirementAnalysis(
         feature="Article management",
         operation="Delete article",
@@ -68,13 +61,11 @@ def create_sparse_delete_article_analysis(
         conditions=[],
         expected_outcomes=[],
         ambiguities=[
-            (
-                "The requirement does not specify "
-                "preconditions or expected results."
-            ),
+            ("The requirement does not specify preconditions or expected results."),
         ],
         interaction_surface=InteractionSurface.UNKNOWN,
     )
+
 
 def test_diagnostic_symbol_scores_for_invalid_login() -> None:
     invalid_login_test = RepositorySymbol(
@@ -103,11 +94,7 @@ def test_diagnostic_symbol_scores_for_invalid_login() -> None:
         path="tests/auth/test_login.py",
         start_line=1,
         end_line=5,
-        source=(
-            "def test_registered_user_can_sign_in("
-            "registered_user, login_page"
-            "): pass"
-        ),
+        source=("def test_registered_user_can_sign_in(registered_user, login_page): pass"),
         parameters=[
             "registered_user",
             "login_page",
@@ -116,18 +103,12 @@ def test_diagnostic_symbol_scores_for_invalid_login() -> None:
 
     invalid_registration_test = RepositorySymbol(
         name="test_user_cannot_register_without_username",
-        qualified_name=(
-            "test_user_cannot_register_without_username"
-        ),
+        qualified_name=("test_user_cannot_register_without_username"),
         symbol_type=SymbolType.TEST,
         path="tests/auth/test_invalid_registration.py",
         start_line=1,
         end_line=5,
-        source=(
-            "def test_user_cannot_register_without_username("
-            "register_page"
-            "): pass"
-        ),
+        source=("def test_user_cannot_register_without_username(register_page): pass"),
         parameters=[
             "register_page",
         ],
@@ -143,9 +124,7 @@ def test_diagnostic_symbol_scores_for_invalid_login() -> None:
         )
     )
 
-    context = provider.retrieve(
-        create_invalid_login_analysis()
-    )
+    context = provider.retrieve(create_invalid_login_analysis())
 
     print("\nQUERY TERMS:")
     print(context.query_terms)
@@ -157,19 +136,13 @@ def test_diagnostic_symbol_scores_for_invalid_login() -> None:
         start=1,
     ):
         print(
-            f"{rank}. "
-            f"{item.symbol.qualified_name} "
-            f"score={item.score} "
-            f"matched={item.matched_terms}"
+            f"{rank}. {item.symbol.qualified_name} score={item.score} matched={item.matched_terms}"
         )
 
-    assert (
-        context.items[0].symbol.qualified_name
-        == "test_valid_user_invalid_password"
-    )
+    assert context.items[0].symbol.qualified_name == "test_valid_user_invalid_password"
 
-def test_retriever_prefers_symbol_matching_operation(
-) -> None:
+
+def test_retriever_prefers_symbol_matching_operation() -> None:
     edit_test = RepositorySymbol(
         name="test_user_can_edit_article",
         qualified_name="test_user_can_edit_article",
@@ -177,10 +150,7 @@ def test_retriever_prefers_symbol_matching_operation(
         path="tests/articles/test_edit_article.py",
         start_line=1,
         end_line=5,
-        source=(
-            "def test_user_can_edit_article"
-            "(existing_article): pass"
-        ),
+        source=("def test_user_can_edit_article(existing_article): pass"),
         parameters=[
             "existing_article",
         ],
@@ -188,17 +158,12 @@ def test_retriever_prefers_symbol_matching_operation(
 
     delete_test = RepositorySymbol(
         name="test_user_can_delete_article",
-        qualified_name=(
-            "test_user_can_delete_article"
-        ),
+        qualified_name=("test_user_can_delete_article"),
         symbol_type=SymbolType.TEST,
         path="tests/articles/test_delete_article.py",
         start_line=1,
         end_line=5,
-        source=(
-            "def test_user_can_delete_article"
-            "(existing_article): pass"
-        ),
+        source=("def test_user_can_delete_article(existing_article): pass"),
         parameters=[
             "existing_article",
         ],
@@ -213,20 +178,14 @@ def test_retriever_prefers_symbol_matching_operation(
         )
     )
 
-    context = provider.retrieve(
-        create_edit_article_analysis()
-    )
+    context = provider.retrieve(create_edit_article_analysis())
 
-    assert (
-        context.items[0].symbol.qualified_name
-        == "test_user_can_edit_article"
-    )
+    assert context.items[0].symbol.qualified_name == "test_user_can_edit_article"
 
     assert "edit" in context.items[0].matched_terms
 
 
-def test_retriever_uses_parameters_as_structural_evidence(
-) -> None:
+def test_retriever_uses_parameters_as_structural_evidence() -> None:
     parameter_match = RepositorySymbol(
         name="prepare",
         qualified_name="prepare",
@@ -234,10 +193,7 @@ def test_retriever_uses_parameters_as_structural_evidence(
         path="helpers/context.py",
         start_line=1,
         end_line=2,
-        source=(
-            "def prepare(existing_article):\n"
-            "    return existing_article"
-        ),
+        source=("def prepare(existing_article):\n    return existing_article"),
         parameters=[
             "existing_article",
         ],
@@ -250,11 +206,7 @@ def test_retriever_uses_parameters_as_structural_evidence(
         path="helpers/context.py",
         start_line=1,
         end_line=3,
-        source=(
-            "def prepare_other():\n"
-            "    existing_article = None\n"
-            "    return existing_article"
-        ),
+        source=("def prepare_other():\n    existing_article = None\n    return existing_article"),
         parameters=[],
     )
 
@@ -267,16 +219,12 @@ def test_retriever_uses_parameters_as_structural_evidence(
         )
     )
 
-    context = provider.retrieve(
-        create_edit_article_analysis()
-    )
+    context = provider.retrieve(create_edit_article_analysis())
 
     assert context.items[0].symbol.name == "prepare"
 
-    assert (
-        context.items[0].score
-        > context.items[1].score
-    )
+    assert context.items[0].score > context.items[1].score
+
 
 def test_diagnostic_symbol_scores_for_edit_article() -> None:
     edit_test = RepositorySymbol(
@@ -287,9 +235,7 @@ def test_diagnostic_symbol_scores_for_edit_article() -> None:
         start_line=1,
         end_line=5,
         source=(
-            "def test_user_can_edit_article("
-            "existing_article, article_update, article_page"
-            "): pass"
+            "def test_user_can_edit_article(existing_article, article_update, article_page): pass"
         ),
         parameters=[
             "existing_article",
@@ -306,10 +252,7 @@ def test_diagnostic_symbol_scores_for_edit_article() -> None:
         parent="ArticlePage",
         start_line=10,
         end_line=12,
-        source=(
-            "def edit_article(self):\n"
-            "    self.edit_button.click()"
-        ),
+        source=("def edit_article(self):\n    self.edit_button.click()"),
         parameters=[
             "self",
         ],
@@ -322,11 +265,7 @@ def test_diagnostic_symbol_scores_for_edit_article() -> None:
         path="tests/articles/test_delete_article.py",
         start_line=1,
         end_line=5,
-        source=(
-            "def test_user_can_delete_article("
-            "existing_article, article_page"
-            "): pass"
-        ),
+        source=("def test_user_can_delete_article(existing_article, article_page): pass"),
         parameters=[
             "existing_article",
             "article_page",
@@ -343,9 +282,7 @@ def test_diagnostic_symbol_scores_for_edit_article() -> None:
         )
     )
 
-    context = provider.retrieve(
-        create_edit_article_analysis()
-    )
+    context = provider.retrieve(create_edit_article_analysis())
 
     print("\nQUERY TERMS:")
     print(context.query_terms)
@@ -357,16 +294,13 @@ def test_diagnostic_symbol_scores_for_edit_article() -> None:
         start=1,
     ):
         print(
-            f"{rank}. "
-            f"{item.symbol.qualified_name} "
-            f"score={item.score} "
-            f"matched={item.matched_terms}"
+            f"{rank}. {item.symbol.qualified_name} score={item.score} matched={item.matched_terms}"
         )
 
     assert context.items
 
-def test_diagnostic_symbol_scores_for_sparse_delete_article(
-) -> None:
+
+def test_diagnostic_symbol_scores_for_sparse_delete_article() -> None:
     delete_test = RepositorySymbol(
         name="test_user_can_delete_article",
         qualified_name="test_user_can_delete_article",
@@ -374,11 +308,7 @@ def test_diagnostic_symbol_scores_for_sparse_delete_article(
         path="tests/articles/test_delete_article.py",
         start_line=1,
         end_line=5,
-        source=(
-            "def test_user_can_delete_article("
-            "existing_article, article_page"
-            "): pass"
-        ),
+        source=("def test_user_can_delete_article(existing_article, article_page): pass"),
         parameters=[
             "existing_article",
             "article_page",
@@ -393,10 +323,7 @@ def test_diagnostic_symbol_scores_for_sparse_delete_article(
         parent="ArticlePage",
         start_line=10,
         end_line=12,
-        source=(
-            "def delete_article(self):\n"
-            "    self.delete_button.click()"
-        ),
+        source=("def delete_article(self):\n    self.delete_button.click()"),
         parameters=[
             "self",
         ],
@@ -409,11 +336,7 @@ def test_diagnostic_symbol_scores_for_sparse_delete_article(
         path="tests/articles/test_edit_article.py",
         start_line=1,
         end_line=5,
-        source=(
-            "def test_user_can_edit_article("
-            "existing_article, article_page"
-            "): pass"
-        ),
+        source=("def test_user_can_edit_article(existing_article, article_page): pass"),
         parameters=[
             "existing_article",
             "article_page",
@@ -427,11 +350,7 @@ def test_diagnostic_symbol_scores_for_sparse_delete_article(
         path="tests/articles/test_create_article.py",
         start_line=1,
         end_line=5,
-        source=(
-            "def test_user_can_create_article("
-            "new_article, article_page"
-            "): pass"
-        ),
+        source=("def test_user_can_create_article(new_article, article_page): pass"),
         parameters=[
             "new_article",
             "article_page",
@@ -449,9 +368,7 @@ def test_diagnostic_symbol_scores_for_sparse_delete_article(
         )
     )
 
-    context = provider.retrieve(
-        create_sparse_delete_article_analysis()
-    )
+    context = provider.retrieve(create_sparse_delete_article_analysis())
 
     print("\nQUERY TERMS:")
     print(context.query_terms)
@@ -463,18 +380,12 @@ def test_diagnostic_symbol_scores_for_sparse_delete_article(
         start=1,
     ):
         print(
-            f"{rank}. "
-            f"{item.symbol.qualified_name} "
-            f"score={item.score} "
-            f"matched={item.matched_terms}"
+            f"{rank}. {item.symbol.qualified_name} score={item.score} matched={item.matched_terms}"
         )
 
-    top_two = {
-        item.symbol.qualified_name
-        for item in context.items[:2]
-    }
+    top_two = {item.symbol.qualified_name for item in context.items[:2]}
 
     assert top_two == {
         "test_user_can_delete_article",
         "ArticlePage.delete_article",
-    }    
+    }

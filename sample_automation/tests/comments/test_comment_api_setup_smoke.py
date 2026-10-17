@@ -31,8 +31,7 @@ def test_comment_api_lifecycle(
         )
 
         assert any(
-            comment.id == created_comment.id
-            and comment.body == comment_data.body
+            comment.id == created_comment.id and comment.body == comment_data.body
             for comment in comments
         )
 
@@ -49,10 +48,7 @@ def test_comment_api_lifecycle(
             slug=existing_article.slug,
         )
 
-        assert all(
-            comment.id != created_comment.id
-            for comment in remaining_comments
-        )
+        assert all(comment.id != created_comment.id for comment in remaining_comments)
 
     finally:
         # Cleanup even when an assertion fails after creation.

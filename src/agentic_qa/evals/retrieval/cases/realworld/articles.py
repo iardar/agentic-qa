@@ -1,5 +1,3 @@
-
-
 from agentic_qa.evals.retrieval.models import RetrievalEvaluationCase
 from agentic_qa.models import (
     InteractionSurface,
@@ -15,10 +13,7 @@ ARTICLE_CASES = [
         analysis=RequirementAnalysis(
             feature="Article management",
             operation="Create article",
-            objective=(
-                "Verify that an authenticated user can create "
-                "and publish a new article."
-            ),
+            objective=("Verify that an authenticated user can create and publish a new article."),
             actors=[
                 "Authenticated user",
             ],
@@ -48,10 +43,7 @@ ARTICLE_CASES = [
         analysis=RequirementAnalysis(
             feature="Article management",
             operation="Edit article",
-            objective=(
-                "Verify that an authenticated user can edit "
-                "an existing article."
-            ),
+            objective=("Verify that an authenticated user can edit an existing article."),
             actors=[
                 "Authenticated user",
                 "Article author",
@@ -83,8 +75,7 @@ ARTICLE_CASES = [
             feature="Article management",
             operation="Delete article",
             objective=(
-                "Verify that an authenticated article author "
-                "can delete an existing article."
+                "Verify that an authenticated article author can delete an existing article."
             ),
             actors=[
                 "Authenticated user",

@@ -21,7 +21,7 @@ from agentic_qa.retrieval.symbols.provider import (
 
 load_dotenv()
 
-DATASET_NAME = "repository-retrieval-realworld-v1"
+DATASET_NAME = "repository-retrieval-realworld-v2"
 
 TOP_K_SYMBOLS = 50
 TOP_K_FILES = 8
@@ -40,9 +40,7 @@ provider = SymbolRepositoryContextProvider(
 def target(
     inputs: dict[str, Any],
 ) -> dict[str, Any]:
-    analysis = RequirementAnalysis.model_validate(
-        inputs["analysis"]
-    )
+    analysis = RequirementAnalysis.model_validate(inputs["analysis"])
 
     symbol_context = provider.retrieve(analysis)
 
@@ -51,26 +49,18 @@ def target(
         top_k=TOP_K_FILES,
     )
 
-    return {
-        "repository_context": context.model_dump(
-            mode="json"
-        )
-    }
+    return {"repository_context": context.model_dump(mode="json")}
 
 
 def retrieval_evaluator(
     outputs: dict[str, Any],
     reference_outputs: dict[str, Any],
 ) -> dict[str, Any]:
-    context = RepositoryContext.model_validate(
-        outputs["repository_context"]
-    )
+    context = RepositoryContext.model_validate(outputs["repository_context"])
 
     metrics = calculate_retrieval_metrics(
         context=context,
-        required_paths=reference_outputs[
-            "required_paths"
-        ],
+        required_paths=reference_outputs["required_paths"],
     )
 
     return {
@@ -104,12 +94,11 @@ def main() -> None:
         evaluators=[
             retrieval_evaluator,
         ],
-        experiment_prefix=(
-            "realworld-retrieval-v2.0-symbol-token-aware"
-        ),
+        experiment_prefix=("realworld-datadset-v2-retrieval-v2.0-symbol-token-aware"),
         metadata={
             "retriever": "symbol",
             "retrieval_version": "v2.0",
+            "dataset_version": "v2",
             "retrieval_unit": "symbol",
             "projection": "unique_paths",
             "top_k_symbols": TOP_K_SYMBOLS,

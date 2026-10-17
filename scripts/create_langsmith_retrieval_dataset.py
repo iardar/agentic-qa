@@ -4,10 +4,16 @@ from langsmith import Client
 from agentic_qa.evals.retrieval.cases import REAL_WORLD_CASES
 
 load_dotenv()
-DATASET_NAME = "repository-retrieval-realworld-v1"
+DATASET_NAME = "repository-retrieval-realworld-v2"
+EXPECTED_CASE_COUNT = 10
 
 
 def main() -> None:
+    if len(REAL_WORLD_CASES) != EXPECTED_CASE_COUNT:
+        raise RuntimeError(
+            f"Expected {EXPECTED_CASE_COUNT} retrieval cases, found {len(REAL_WORLD_CASES)}."
+        )
+
     client = Client()
 
     if client.has_dataset(dataset_name=DATASET_NAME):
@@ -17,10 +23,14 @@ def main() -> None:
     else:
         dataset = client.create_dataset(
             dataset_name=DATASET_NAME,
-            description=("Repository retrieval regression dataset for Agentic QA."),
+            description=(
+                "RealWorld repository retrieval benchmark v2:"
+                "authentication, articles, and comments."
+            ),
             metadata={
                 "component": "repository_retrieval",
-                "dataset_version": "v1",
+                "dataset_version": "v2",
+                "case_count": EXPECTED_CASE_COUNT,
             },
         )
 

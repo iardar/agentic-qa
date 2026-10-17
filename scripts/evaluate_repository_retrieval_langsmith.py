@@ -19,7 +19,7 @@ from agentic_qa.retrieval.models import (
 
 load_dotenv()
 
-DATASET_NAME = "repository-retrieval-realworld-v1"
+DATASET_NAME = "repository-retrieval-realworld-v2"
 
 
 provider = KeywordRepositoryContextProvider(
@@ -80,10 +80,11 @@ def main() -> None:
         evaluators=[
             retrieval_evaluator,
         ],
-        experiment_prefix=("realworld-retrieval-v1.2-token-aware"),
+        experiment_prefix=("realworld-dataset-v2-retrieval-v1.2-token-aware"),
         metadata={
             "retriever": "keyword",
             "retrieval_version": "v1.2",
+            "dataset_version": "v2",
             "corpus": "realworld",
         },
     )

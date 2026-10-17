@@ -47,11 +47,9 @@ def main() -> None:
             case.analysis,
         )
 
-        repository_context = (
-            project_symbols_to_repository_context(
-                symbol_context,
-                top_k=TOP_K_FILES,
-            )
+        repository_context = project_symbols_to_repository_context(
+            symbol_context,
+            top_k=TOP_K_FILES,
         )
 
         required_paths = set(case.required_paths)
@@ -80,11 +78,7 @@ def main() -> None:
         ):
             symbol = item.symbol
 
-            required_marker = (
-                "[REQ]"
-                if symbol.path in required_paths
-                else "     "
-            )
+            required_marker = "[REQ]" if symbol.path in required_paths else "     "
 
             print(
                 f"{rank:>2}. "
@@ -93,14 +87,9 @@ def main() -> None:
                 f"{symbol.qualified_name}"
             )
 
-            print(
-                f"     score={item.score} "
-                f"path={symbol.path}"
-            )
+            print(f"     score={item.score} path={symbol.path}")
 
-            print(
-                f"     matched={item.matched_terms}"
-            )
+            print(f"     matched={item.matched_terms}")
 
         first_symbol_by_path: dict[str, str] = {}
 
@@ -117,26 +106,13 @@ def main() -> None:
             repository_context.items,
             start=1,
         ):
-            required_marker = (
-                "[REQ]"
-                if item.path in required_paths
-                else "     "
-            )
+            required_marker = "[REQ]" if item.path in required_paths else "     "
 
-            origin_symbol = first_symbol_by_path[
-                item.path
-            ]
+            origin_symbol = first_symbol_by_path[item.path]
 
-            print(
-                f"{rank:>2}. "
-                f"{required_marker} "
-                f"{item.path}"
-            )
+            print(f"{rank:>2}. {required_marker} {item.path}")
 
-            print(
-                f"     score={item.score} "
-                f"via={origin_symbol}"
-            )
+            print(f"     score={item.score} via={origin_symbol}")
 
         metrics = calculate_retrieval_metrics(
             context=repository_context,
@@ -147,59 +123,23 @@ def main() -> None:
 
         print()
         print("METRICS:")
-        print(
-            f"  Top1 Relevant : "
-            f"{int(metrics.top1_relevant)}"
-        )
-        print(
-            f"  Precision@3   : "
-            f"{metrics.precision_at_3:.2f}"
-        )
-        print(
-            f"  Recall@3      : "
-            f"{metrics.recall_at_3:.2f}"
-        )
-        print(
-            f"  Recall@5      : "
-            f"{metrics.recall_at_5:.2f}"
-        )
+        print(f"  Top1 Relevant : {int(metrics.top1_relevant)}")
+        print(f"  Precision@3   : {metrics.precision_at_3:.2f}")
+        print(f"  Recall@3      : {metrics.recall_at_3:.2f}")
+        print(f"  Recall@5      : {metrics.recall_at_5:.2f}")
 
     case_count = len(all_metrics)
 
     if case_count == 0:
         return
 
-    average_top1 = (
-        sum(
-            int(metrics.top1_relevant)
-            for metrics in all_metrics
-        )
-        / case_count
-    )
+    average_top1 = sum(int(metrics.top1_relevant) for metrics in all_metrics) / case_count
 
-    average_precision_at_3 = (
-        sum(
-            metrics.precision_at_3
-            for metrics in all_metrics
-        )
-        / case_count
-    )
+    average_precision_at_3 = sum(metrics.precision_at_3 for metrics in all_metrics) / case_count
 
-    average_recall_at_3 = (
-        sum(
-            metrics.recall_at_3
-            for metrics in all_metrics
-        )
-        / case_count
-    )
+    average_recall_at_3 = sum(metrics.recall_at_3 for metrics in all_metrics) / case_count
 
-    average_recall_at_5 = (
-        sum(
-            metrics.recall_at_5
-            for metrics in all_metrics
-        )
-        / case_count
-    )
+    average_recall_at_5 = sum(metrics.recall_at_5 for metrics in all_metrics) / case_count
 
     print()
     print("=" * 100)
@@ -207,18 +147,9 @@ def main() -> None:
     print("=" * 100)
     print(f"Cases       : {case_count}")
     print(f"Top1        : {average_top1:.2f}")
-    print(
-        f"Precision@3 : "
-        f"{average_precision_at_3:.2f}"
-    )
-    print(
-        f"Recall@3    : "
-        f"{average_recall_at_3:.2f}"
-    )
-    print(
-        f"Recall@5    : "
-        f"{average_recall_at_5:.2f}"
-    )
+    print(f"Precision@3 : {average_precision_at_3:.2f}")
+    print(f"Recall@3    : {average_recall_at_3:.2f}")
+    print(f"Recall@5    : {average_recall_at_5:.2f}")
 
 
 if __name__ == "__main__":

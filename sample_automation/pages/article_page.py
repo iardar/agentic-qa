@@ -59,9 +59,7 @@ class ArticlePage(BasePage):
 
     def add_comment(self, body: str) -> None:
         """Submit a comment on the current article."""
-        comment_input = self.page.get_by_placeholder(
-            "Write a comment..."
-        )
+        comment_input = self.page.get_by_placeholder("Write a comment...")
 
         post_button = self.page.get_by_role(
             "button",
@@ -71,7 +69,6 @@ class ArticlePage(BasePage):
 
         comment_input.fill(body)
         post_button.click()
-
 
     def comment_by_text(self, body: str) -> Comment:
         """Return the comment component matching the given body."""

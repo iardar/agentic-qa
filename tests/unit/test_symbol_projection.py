@@ -19,10 +19,7 @@ def test_projection_collapses_duplicate_paths() -> None:
         parent="ArticlePage",
         start_line=20,
         end_line=22,
-        source=(
-            "def edit_article(self):\n"
-            "    self.edit_button.click()"
-        ),
+        source=("def edit_article(self):\n    self.edit_button.click()"),
         parameters=["self"],
     )
 
@@ -44,11 +41,7 @@ def test_projection_collapses_duplicate_paths() -> None:
         path="tests/articles/test_edit_article.py",
         start_line=1,
         end_line=10,
-        source=(
-            "def test_user_can_edit_article("
-            "existing_article, article_page"
-            "): pass"
-        ),
+        source=("def test_user_can_edit_article(existing_article, article_page): pass"),
         parameters=[
             "existing_article",
             "article_page",
@@ -125,17 +118,8 @@ def test_projection_collapses_duplicate_paths() -> None:
 
     assert context.items[0].score == 30.0
 
-    assert (
-        context.items[0].artifact_type
-        == RepositoryArtifactType.PAGE_OBJECT
-    )
+    assert context.items[0].artifact_type == RepositoryArtifactType.PAGE_OBJECT
 
-    assert (
-        context.items[1].artifact_type
-        == RepositoryArtifactType.TEST
-    )
+    assert context.items[1].artifact_type == RepositoryArtifactType.TEST
 
-    assert (
-        context.items[2].artifact_type
-        == RepositoryArtifactType.FIXTURE
-    )
+    assert context.items[2].artifact_type == RepositoryArtifactType.FIXTURE

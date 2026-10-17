@@ -63,9 +63,7 @@ class SymbolRepositoryContextProvider:
         top_k_symbols: int = 50,
     ) -> None:
         if top_k_symbols <= 0:
-            raise ValueError(
-                "top_k_symbols must be greater than zero."
-            )
+            raise ValueError("top_k_symbols must be greater than zero.")
 
         self._symbol_index = symbol_index
         self._top_k_symbols = top_k_symbols
@@ -118,14 +116,7 @@ class SymbolRepositoryContextProvider:
             text.lower(),
         )
 
-        terms = {
-            word
-            for word in words
-            if (
-                len(word) >= 3
-                and word not in self.STOP_WORDS
-            )
-        }
+        terms = {word for word in words if (len(word) >= 3 and word not in self.STOP_WORDS)}
 
         return sorted(terms)
 
@@ -134,35 +125,15 @@ class SymbolRepositoryContextProvider:
         symbol: RepositorySymbol,
         query_terms: list[str],
     ) -> RetrievedSymbol | None:
-        qualified_name_tokens = set(
-            _tokenize_symbol_text(
-                symbol.qualified_name
-            )
-        )
+        qualified_name_tokens = set(_tokenize_symbol_text(symbol.qualified_name))
 
-        parameter_tokens = set(
-            _tokenize_symbol_text(
-                " ".join(symbol.parameters)
-            )
-        )
+        parameter_tokens = set(_tokenize_symbol_text(" ".join(symbol.parameters)))
 
-        parent_tokens = set(
-            _tokenize_symbol_text(
-                symbol.parent or ""
-            )
-        )
+        parent_tokens = set(_tokenize_symbol_text(symbol.parent or ""))
 
-        path_tokens = set(
-            _tokenize_symbol_text(
-                symbol.path
-            )
-        )
+        path_tokens = set(_tokenize_symbol_text(symbol.path))
 
-        source_tokens = Counter(
-            _tokenize_symbol_text(
-                symbol.source
-            )
-        )
+        source_tokens = Counter(_tokenize_symbol_text(symbol.source))
 
         score = 0.0
         matched_terms: list[str] = []

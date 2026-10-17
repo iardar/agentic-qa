@@ -1,4 +1,3 @@
-
 from playwright.sync_api import Page, expect
 
 from sample_automation.api.realworld_client import RealWorldApiClient
@@ -37,14 +36,10 @@ def test_user_can_create_comment(
         assert response.status == 201
 
         # Assert: UI
-        comment = article_page.comment_by_text(
-            comment_data.body
-        )
+        comment = article_page.comment_by_text(comment_data.body)
 
         expect(comment.root).to_have_count(1)
-        expect(comment.body).to_have_text(
-            comment_data.body
-        )
+        expect(comment.body).to_have_text(comment_data.body)
 
         # Assert: backend
         comments = realworld_api_client.get_comments(
@@ -53,22 +48,14 @@ def test_user_can_create_comment(
         )
 
         created_comment = next(
-            (
-                item
-                for item in comments
-                if item.body == comment_data.body
-            ),
+            (item for item in comments if item.body == comment_data.body),
             None,
         )
 
         assert created_comment is not None
         assert created_comment.id > 0
 
-        expect(
-            comment.author_link(
-                created_comment.author_username
-            )
-        ).to_be_visible()
+        expect(comment.author_link(created_comment.author_username)).to_be_visible()
 
     finally:
         # Cleanup even if UI assertions fail.

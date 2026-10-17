@@ -9,9 +9,7 @@ class Comment:
 
         self.body = root.locator(".card-text")
 
-        self.delete_button = root.locator(
-            ".mod-options .ion-trash-a"
-        )
+        self.delete_button = root.locator(".mod-options .ion-trash-a")
 
     def author_link(self, username: str) -> Locator:
         return self.root.get_by_role(

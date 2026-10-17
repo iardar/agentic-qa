@@ -221,7 +221,7 @@ class RealWorldApiClient:
         raise RuntimeError(
             f"RealWorld API {operation} failed: status={response.status}, body={response.text()}"
         )
-    
+
     def create_comment(
         self,
         token: str,
@@ -270,14 +270,9 @@ class RealWorldApiClient:
         comments = payload.get("comments")
 
         if not isinstance(comments, list):
-            raise RuntimeError(
-                "Get comments response has invalid comments list."
-            )
+            raise RuntimeError("Get comments response has invalid comments list.")
 
-        return [
-            self._parse_comment(item)
-            for item in comments
-        ]    
+        return [self._parse_comment(item) for item in comments]
 
     def delete_comment(
         self,
@@ -303,7 +298,6 @@ class RealWorldApiClient:
             operation="delete comment",
         )
 
-
     def _comment_from_response(
         self,
         response: APIResponse,
@@ -313,48 +307,32 @@ class RealWorldApiClient:
             response.json(),
         )
 
-        return self._parse_comment(
-            payload.get("comment")
-        )
-
+        return self._parse_comment(payload.get("comment"))
 
     def _parse_comment(
         self,
         comment: Any,
     ) -> CreatedComment:
         if not isinstance(comment, dict):
-            raise RuntimeError(
-                "API response does not contain a comment object."
-            )
+            raise RuntimeError("API response does not contain a comment object.")
 
         comment_id = comment.get("id")
         body = comment.get("body")
         author = comment.get("author")
 
-        if (
-            not isinstance(comment_id, int)
-            or isinstance(comment_id, bool)
-        ):
-            raise RuntimeError(
-                "Comment response has invalid id."
-            )
+        if not isinstance(comment_id, int) or isinstance(comment_id, bool):
+            raise RuntimeError("Comment response has invalid id.")
 
         if not isinstance(body, str):
-            raise RuntimeError(
-                "Comment response has invalid body."
-            )
+            raise RuntimeError("Comment response has invalid body.")
 
         if not isinstance(author, dict):
-            raise RuntimeError(
-                "Comment response has invalid author."
-            )
+            raise RuntimeError("Comment response has invalid author.")
 
         username = author.get("username")
 
         if not isinstance(username, str):
-            raise RuntimeError(
-                "Comment response has invalid author username."
-            )
+            raise RuntimeError("Comment response has invalid author username.")
 
         return CreatedComment(
             id=comment_id,

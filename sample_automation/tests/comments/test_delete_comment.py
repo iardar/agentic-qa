@@ -1,4 +1,3 @@
-
 from playwright.sync_api import Page, expect
 
 from sample_automation.api.realworld_client import RealWorldApiClient
@@ -20,9 +19,7 @@ def test_user_can_delete_own_comment(
     # Arrange
     article_page.open(existing_article.slug)
 
-    comment = article_page.comment_by_text(
-        existing_comment.body
-    )
+    comment = article_page.comment_by_text(existing_comment.body)
 
     expect(comment.root).to_have_count(1)
     expect(comment.delete_button).to_be_visible()
@@ -32,8 +29,7 @@ def test_user_can_delete_own_comment(
         lambda response: (
             response.request.method == "DELETE"
             and response.url.split("?")[0].endswith(
-                f"/articles/{existing_article.slug}"
-                f"/comments/{existing_comment.id}"
+                f"/articles/{existing_article.slug}/comments/{existing_comment.id}"
             )
         )
     ) as response_info:
@@ -51,7 +47,4 @@ def test_user_can_delete_own_comment(
         slug=existing_article.slug,
     )
 
-    assert all(
-        item.id != existing_comment.id
-        for item in remaining_comments
-    )
+    assert all(item.id != existing_comment.id for item in remaining_comments)

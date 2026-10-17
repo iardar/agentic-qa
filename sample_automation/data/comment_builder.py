@@ -15,6 +15,4 @@ class CreatedComment:
 
 
 def build_unique_comment() -> CommentData:
-    return CommentData(
-        body=f"QA automated comment {uuid4().hex}"
-    )
+    return CommentData(body=f"QA automated comment {uuid4().hex}")
