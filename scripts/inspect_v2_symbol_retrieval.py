@@ -72,11 +72,11 @@ def main() -> None:
         print()
         print("TOP SYMBOLS:")
 
-        for rank, item in enumerate(
+        for rank, symbol_item in enumerate(
             symbol_context.items[:SYMBOL_PREVIEW_LIMIT],
             start=1,
         ):
-            symbol = item.symbol
+            symbol = symbol_item.symbol
 
             required_marker = "[REQ]" if symbol.path in required_paths else "     "
 
@@ -87,32 +87,32 @@ def main() -> None:
                 f"{symbol.qualified_name}"
             )
 
-            print(f"     score={item.score} path={symbol.path}")
+            print(f"     score={symbol_item.score} path={symbol.path}")
 
-            print(f"     matched={item.matched_terms}")
+            print(f"     matched={symbol_item.matched_terms}")
 
         first_symbol_by_path: dict[str, str] = {}
 
-        for item in symbol_context.items:
+        for symbol_item in symbol_context.items:
             first_symbol_by_path.setdefault(
-                item.symbol.path,
-                item.symbol.qualified_name,
+                symbol_item.symbol.path,
+                symbol_item.symbol.qualified_name,
             )
 
         print()
         print("PROJECTED FILES:")
 
-        for rank, item in enumerate(
+        for rank, file_item in enumerate(
             repository_context.items,
             start=1,
         ):
-            required_marker = "[REQ]" if item.path in required_paths else "     "
+            required_marker = "[REQ]" if file_item.path in required_paths else "     "
 
-            origin_symbol = first_symbol_by_path[item.path]
+            origin_symbol = first_symbol_by_path[file_item.path]
 
-            print(f"{rank:>2}. {required_marker} {item.path}")
+            print(f"{rank:>2}. {required_marker} {file_item.path}")
 
-            print(f"     score={item.score} via={origin_symbol}")
+            print(f"     score={file_item.score} via={origin_symbol}")
 
         metrics = calculate_retrieval_metrics(
             context=repository_context,
