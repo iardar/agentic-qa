@@ -37,3 +37,5 @@ The next experiment, V2.1, will investigate dependency-aware expansion.
 ## Provenance
 
 Record the Git commit SHA, LangSmith dataset ID, experiment IDs, and experiment dates here before creating the baseline tag.
+
+84dfff320ae86c67af4c17292404ec755910924e
