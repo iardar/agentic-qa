@@ -1,4 +1,5 @@
 from typing import Any
+
 from dotenv import load_dotenv
 from langsmith import Client
 
@@ -18,7 +19,7 @@ from agentic_qa.retrieval.models import (
 
 load_dotenv()
 
-DATASET_NAME = "repository-retrieval-realworld-v1"
+DATASET_NAME = "repository-retrieval-realworld-v2"
 
 
 provider = KeywordRepositoryContextProvider(
@@ -26,60 +27,49 @@ provider = KeywordRepositoryContextProvider(
     top_k=8,
 )
 
+
 def target(
     inputs: dict[str, Any],
 ) -> dict[str, Any]:
-    analysis = RequirementAnalysis.model_validate(
-        inputs["analysis"]
-    )
+    analysis = RequirementAnalysis.model_validate(inputs["analysis"])
 
-    context = provider.retrieve(
-        analysis
-    )
+    context = provider.retrieve(analysis)
 
-    return {
-        "repository_context": (
-            context.model_dump(
-                mode="json"
-            )
-        )
-    }
+    return {"repository_context": (context.model_dump(mode="json"))}
+
 
 def retrieval_evaluator(
     outputs: dict[str, Any],
     reference_outputs: dict[str, Any],
-) -> list[dict[str, Any]]:
-    context = RepositoryContext.model_validate(
-        outputs["repository_context"]
-    )
-
-    required_paths = reference_outputs[
-        "required_paths"
-    ]
+) -> dict[str, Any]:
+    context = RepositoryContext.model_validate(outputs["repository_context"])
 
     metrics = calculate_retrieval_metrics(
         context=context,
-        required_paths=required_paths,
+        required_paths=reference_outputs["required_paths"],
     )
 
-    return [
-        {
-            "key": "top1_relevant",
-            "score": metrics.top1_relevant,
-        },
-        {
-            "key": "precision_at_3",
-            "score": metrics.precision_at_3,
-        },
-        {
-            "key": "recall_at_3",
-            "score": metrics.recall_at_3,
-        },
-        {
-            "key": "recall_at_5",
-            "score": metrics.recall_at_5,
-        },
-    ]
+    return {
+        "results": [
+            {
+                "key": "top1_relevant",
+                "score": metrics.top1_relevant,
+            },
+            {
+                "key": "precision_at_3",
+                "score": metrics.precision_at_3,
+            },
+            {
+                "key": "recall_at_3",
+                "score": metrics.recall_at_3,
+            },
+            {
+                "key": "recall_at_5",
+                "score": metrics.recall_at_5,
+            },
+        ]
+    }
+
 
 def main() -> None:
     client = Client()
@@ -90,17 +80,17 @@ def main() -> None:
         evaluators=[
             retrieval_evaluator,
         ],
-        experiment_prefix=(
-            "repository-retrieval-realworld-v1"            
-        ),
+        experiment_prefix=("realworld-dataset-v2-retrieval-v1.2-token-aware"),
         metadata={
             "retriever": "keyword",
-            "retrieval_version": "v1.1",
+            "retrieval_version": "v1.2",
+            "dataset_version": "v2",
             "corpus": "realworld",
         },
     )
 
     print(results)
+
 
 if __name__ == "__main__":
     main()

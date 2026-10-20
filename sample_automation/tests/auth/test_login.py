@@ -1,7 +1,7 @@
 from playwright.sync_api import expect
 
 from sample_automation.data.user_builder import (
-    TestUser,
+    UserData,
 )
 from sample_automation.pages.home_page import (
     HomePage,
@@ -14,7 +14,7 @@ from sample_automation.pages.login_page import (
 def test_registered_user_can_sign_in(
     login_page: LoginPage,
     home_page: HomePage,
-    registered_user: TestUser,
+    registered_user: UserData,
 ) -> None:
     login_page.open()
 

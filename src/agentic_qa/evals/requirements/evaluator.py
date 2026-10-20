@@ -19,10 +19,7 @@ def contains_terms(
 ) -> bool:
     text = " ".join(values).lower()
 
-    return all(
-        term.lower() in text
-        for term in terms
-    )
+    return all(term.lower() in text for term in terms)
 
 
 def contains_alternatives(
@@ -31,13 +28,7 @@ def contains_alternatives(
 ) -> bool:
     text = " ".join(values).lower()
 
-    return all(
-        any(
-            alternative.lower() in text
-            for alternative in group
-        )
-        for group in alternatives
-    )
+    return all(any(alternative.lower() in text for alternative in group) for group in alternatives)
 
 
 def evaluate_analysis(
@@ -49,10 +40,7 @@ def evaluate_analysis(
     results.append(
         CheckResult(
             name="interaction_surface",
-            passed=(
-                analysis.interaction_surface
-                == case.expected_surface
-            ),
+            passed=(analysis.interaction_surface == case.expected_surface),
             message=(
                 f"expected={case.expected_surface.value}, "
                 f"actual={analysis.interaction_surface.value}"
@@ -68,10 +56,7 @@ def evaluate_analysis(
                     analysis.conditions,
                     case.required_condition_terms,
                 ),
-                message=(
-                    "required terms="
-                    f"{case.required_condition_terms}"
-                ),
+                message=(f"required terms={case.required_condition_terms}"),
             )
         )
 
@@ -83,10 +68,7 @@ def evaluate_analysis(
                     analysis.conditions,
                     case.required_condition_alternatives,
                 ),
-                message=(
-                    "accepted alternatives="
-                    f"{case.required_condition_alternatives}"
-                ),
+                message=(f"accepted alternatives={case.required_condition_alternatives}"),
             )
         )
 
@@ -98,10 +80,7 @@ def evaluate_analysis(
                     analysis.expected_outcomes,
                     case.required_outcome_terms,
                 ),
-                message=(
-                    "required terms="
-                    f"{case.required_outcome_terms}"
-                ),
+                message=(f"required terms={case.required_outcome_terms}"),
             )
         )
 
@@ -113,25 +92,17 @@ def evaluate_analysis(
                     analysis.expected_outcomes,
                     case.required_outcome_alternatives,
                 ),
-                message=(
-                    "accepted alternatives="
-                    f"{case.required_outcome_alternatives}"
-                ),
+                message=(f"accepted alternatives={case.required_outcome_alternatives}"),
             )
         )
 
     if case.require_ambiguities is not None:
-        has_ambiguities = bool(
-            analysis.ambiguities
-        )
+        has_ambiguities = bool(analysis.ambiguities)
 
         results.append(
             CheckResult(
                 name="ambiguities",
-                passed=(
-                    has_ambiguities
-                    == case.require_ambiguities
-                ),
+                passed=(has_ambiguities == case.require_ambiguities),
                 message=(
                     "expected ambiguities="
                     f"{case.require_ambiguities}, "

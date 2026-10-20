@@ -7,10 +7,7 @@ TODOMVC_CASES = [
         analysis=RequirementAnalysis(
             feature="Todo management",
             operation="Complete an existing todo",
-            objective=(
-                "Verify that a user can complete "
-                "a todo that already exists."
-            ),
+            objective=("Verify that a user can complete a todo that already exists."),
             actors=[
                 "User",
             ],
@@ -18,13 +15,10 @@ TODOMVC_CASES = [
                 "A todo already exists.",
             ],
             expected_outcomes=[
-                "The user is able to complete "
-                "the existing todo.",
+                "The user is able to complete the existing todo.",
             ],
             ambiguities=[],
-            interaction_surface=(
-                InteractionSurface.UNKNOWN
-            ),
+            interaction_surface=(InteractionSurface.UNKNOWN),
         ),
         required_paths=[
             "tests/test_todo_completion.py",
@@ -37,10 +31,7 @@ TODOMVC_CASES = [
         analysis=RequirementAnalysis(
             feature="Todo management",
             operation="Create a new todo",
-            objective=(
-                "Verify that a user can create "
-                "a new todo."
-            ),
+            objective=("Verify that a user can create a new todo."),
             actors=[
                 "User",
             ],
@@ -49,9 +40,7 @@ TODOMVC_CASES = [
                 "A new todo is created.",
             ],
             ambiguities=[],
-            interaction_surface=(
-                InteractionSurface.UNKNOWN
-            ),
+            interaction_surface=(InteractionSurface.UNKNOWN),
         ),
         required_paths=[
             "tests/test_todo_creation.py",
@@ -64,10 +53,7 @@ TODOMVC_CASES = [
         analysis=RequirementAnalysis(
             feature="Task management",
             operation="Mark an existing task as done",
-            objective=(
-                "Verify that a user can mark "
-                "an existing task as done."
-            ),
+            objective=("Verify that a user can mark an existing task as done."),
             actors=[
                 "User",
             ],
@@ -78,9 +64,7 @@ TODOMVC_CASES = [
                 "The task is marked as done.",
             ],
             ambiguities=[],
-            interaction_surface=(
-                InteractionSurface.UNKNOWN
-            ),
+            interaction_surface=(InteractionSurface.UNKNOWN),
         ),
         required_paths=[
             "tests/test_todo_completion.py",

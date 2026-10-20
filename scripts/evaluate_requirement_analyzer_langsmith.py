@@ -1,4 +1,5 @@
 from typing import Any
+
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langsmith import Client
@@ -24,18 +25,14 @@ DATASET_NAME = "requirement-analyzer-v1"
 
 def create_analyzer() -> LLMRequirementAnalyzer:
     if settings.openai_api_key is None:
-        raise RuntimeError(
-            "OPENAI_API_KEY is not configured."
-        )
+        raise RuntimeError("OPENAI_API_KEY is not configured.")
 
     model = ChatOpenAI(
         model=settings.llm_model,
         api_key=settings.openai_api_key,
     )
 
-    return LLMRequirementAnalyzer(
-        model=model
-    )
+    return LLMRequirementAnalyzer(model=model)
 
 
 analyzer = create_analyzer()
@@ -44,15 +41,12 @@ analyzer = create_analyzer()
 def target(
     inputs: dict[str, Any],
 ) -> dict[str, Any]:
-    analysis = analyzer.analyze(
-        inputs["requirement"]
-    )
+    analysis = analyzer.analyze(inputs["requirement"])
 
     return {
-        "analysis": analysis.model_dump(
-            mode="json"
-        ),
+        "analysis": analysis.model_dump(mode="json"),
     }
+
 
 def build_case(
     inputs: dict[str, Any],
@@ -61,11 +55,7 @@ def build_case(
     return RequirementEvaluationCase(
         name="langsmith_case",
         requirement=inputs["requirement"],
-        expected_surface=InteractionSurface(
-            reference_outputs[
-                "expected_surface"
-            ]
-        ),
+        expected_surface=InteractionSurface(reference_outputs["expected_surface"]),
         required_condition_terms=(
             reference_outputs.get(
                 "required_condition_terms",
@@ -90,11 +80,7 @@ def build_case(
                 [],
             )
         ),
-        require_ambiguities=(
-            reference_outputs.get(
-                "require_ambiguities"
-            )
-        ),
+        require_ambiguities=(reference_outputs.get("require_ambiguities")),
     )
 
 
@@ -102,29 +88,22 @@ def requirement_analysis_evaluator(
     inputs: dict[str, Any],
     outputs: dict[str, Any],
     reference_outputs: dict[str, Any],
-) -> list[dict[str, Any]]:
-    analysis = RequirementAnalysis.model_validate(
-        outputs["analysis"]
-    )
+) -> dict[str, Any]:
+    analysis = RequirementAnalysis.model_validate(outputs["analysis"])
 
-    case = build_case(
-        inputs,
-        reference_outputs,
-    )
+    case = build_case(inputs, reference_outputs)
+    checks = evaluate_analysis(analysis, case)
 
-    checks = evaluate_analysis(
-        analysis,
-        case,
-    )
-
-    return [
-        {
-            "key": check.name,
-            "score": check.passed,
-            "comment": check.message,
-        }
-        for check in checks
-    ]
+    return {
+        "results": [
+            {
+                "key": check.name,
+                "score": check.passed,
+                "comment": check.message,
+            }
+            for check in checks
+        ]
+    }
 
 
 def case_pass_evaluator(
@@ -132,9 +111,7 @@ def case_pass_evaluator(
     outputs: dict[str, Any],
     reference_outputs: dict[str, Any],
 ) -> dict[str, Any]:
-    analysis = RequirementAnalysis.model_validate(
-        outputs["analysis"]
-    )
+    analysis = RequirementAnalysis.model_validate(outputs["analysis"])
 
     case = build_case(
         inputs,
@@ -146,27 +123,15 @@ def case_pass_evaluator(
         case,
     )
 
-    passed = all(
-        check.passed
-        for check in checks
-    )
+    passed = all(check.passed for check in checks)
 
-    failed_checks = [
-        check.name
-        for check in checks
-        if not check.passed
-    ]
+    failed_checks = [check.name for check in checks if not check.passed]
 
     return {
         "key": "case_pass",
         "score": passed,
         "comment": (
-            "all checks passed"
-            if passed
-            else (
-                "failed checks: "
-                + ", ".join(failed_checks)
-            )
+            "all checks passed" if passed else ("failed checks: " + ", ".join(failed_checks))
         ),
     }
 
@@ -181,15 +146,11 @@ def main() -> None:
             requirement_analysis_evaluator,
             case_pass_evaluator,
         ],
-        experiment_prefix=(
-            "requirement-analyzer"
-        ),
+        experiment_prefix=("requirement-analyzer"),
         max_concurrency=2,
         metadata={
             "model": settings.llm_model,
-            "component": (
-                "requirement_analyzer"
-            ),
+            "component": ("requirement_analyzer"),
             "analyzer_version": "v1",
         },
     )

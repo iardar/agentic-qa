@@ -1,14 +1,11 @@
-from agentic_qa.models import RequirementAnalysis
+from agentic_qa.models import (
+    InteractionSurface,
+    RequirementAnalysis,
+)
 from agentic_qa.retrieval.models import (
     RepositoryArtifactType,
     RepositoryContext,
     RetrievedContextItem,
-)
-
-
-from agentic_qa.models import (
-    InteractionSurface,
-    RequirementAnalysis,
 )
 
 
@@ -20,9 +17,7 @@ class FakeRequirementAnalyzer:
         return RequirementAnalysis(
             feature="Component management",
             operation="Delete an existing component",
-            objective=(
-                "Verify that an existing component can be deleted."
-            ),
+            objective=("Verify that an existing component can be deleted."),
             actors=[
                 "User",
             ],
@@ -35,11 +30,10 @@ class FakeRequirementAnalyzer:
             ambiguities=[
                 "The interaction surface is not specified.",
             ],
-            interaction_surface=(
-                InteractionSurface.UNKNOWN
-            ),
+            interaction_surface=(InteractionSurface.UNKNOWN),
         )
-    
+
+
 class FakeRepositoryContextProvider:
     def retrieve(
         self,

@@ -18,20 +18,12 @@ def calculate_retrieval_metrics(
     context: RepositoryContext,
     required_paths: list[str],
 ) -> RetrievalMetrics:
-    retrieved_paths = [
-        item.path
-        for item in context.items
-    ]
+    retrieved_paths = [item.path for item in context.items]
 
-    required = set(
-        required_paths
-    )
+    required = set(required_paths)
 
     return RetrievalMetrics(
-        top1_relevant=bool(
-            retrieved_paths
-            and retrieved_paths[0] in required
-        ),
+        top1_relevant=bool(retrieved_paths and retrieved_paths[0] in required),
         precision_at_3=_precision_at_k(
             retrieved_paths,
             required,
@@ -49,22 +41,18 @@ def calculate_retrieval_metrics(
         ),
     )
 
+
 def _precision_at_k(
     retrieved_paths: list[str],
     relevant_paths: set[str],
     k: int,
 ) -> float:
     if k <= 0:
-        raise ValueError(
-            "k must be greater than zero."
-        )
+        raise ValueError("k must be greater than zero.")
 
     top_k = retrieved_paths[:k]
 
-    hits = sum(
-        path in relevant_paths
-        for path in top_k
-    )
+    hits = sum(path in relevant_paths for path in top_k)
 
     return hits / k
 
@@ -79,11 +67,6 @@ def _recall_at_k(
 
     top_k = retrieved_paths[:k]
 
-    hits = sum(
-        path in relevant_paths
-        for path in top_k
-    )
+    hits = sum(path in relevant_paths for path in top_k)
 
-    return hits / len(
-        relevant_paths
-    )
+    return hits / len(relevant_paths)

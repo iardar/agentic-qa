@@ -1,0 +1,82 @@
+from playwright.sync_api import Locator, Page
+
+from sample_automation.components.comment import Comment
+from sample_automation.components.navigation import Navigation
+from sample_automation.pages.base_page import BasePage
+
+
+class ArticlePage(BasePage):
+    def __init__(
+        self,
+        page: Page,
+        base_url: str,
+    ) -> None:
+        super().__init__(
+            page=page,
+            base_url=base_url,
+        )
+
+        self.navigation = Navigation(page)
+
+        self.banner = page.locator(".banner")
+
+        self.article_body = page.locator(".article-content p")
+
+        self.edit_button = self.banner.get_by_role(
+            "link",
+            name="Edit Article",
+        )
+
+        self.delete_button = self.banner.get_by_role(
+            "button",
+            name="Delete Article",
+        )
+
+    def open(
+        self,
+        slug: str,
+    ) -> None:
+        self.open_path(f"/article/{slug}")
+
+    def title(
+        self,
+        title: str,
+    ) -> Locator:
+        return self.page.get_by_role(
+            "heading",
+            name=title,
+            exact=True,
+        )
+
+    def body(self) -> Locator:
+        return self.article_body
+
+    def edit_article(self) -> None:
+        self.edit_button.click()
+
+    def delete_article(self) -> None:
+        self.delete_button.click()
+
+    def add_comment(self, body: str) -> None:
+        """Submit a comment on the current article."""
+        comment_input = self.page.get_by_placeholder("Write a comment...")
+
+        post_button = self.page.get_by_role(
+            "button",
+            name="Post Comment",
+            exact=True,
+        )
+
+        comment_input.fill(body)
+        post_button.click()
+
+    def comment_by_text(self, body: str) -> Comment:
+        """Return the comment component matching the given body."""
+        comment_root = self.page.locator(".card").filter(
+            has=self.page.locator(
+                ".card-text",
+                has_text=body,
+            )
+        )
+
+        return Comment(comment_root)
